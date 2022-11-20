@@ -143,6 +143,7 @@
             ProductAddToCartModel.Quantity = 1;
 
             if (ShoppingCartCountModel != null) {
+                // Signal that the cart has been updated.
                 await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
             } 
 
