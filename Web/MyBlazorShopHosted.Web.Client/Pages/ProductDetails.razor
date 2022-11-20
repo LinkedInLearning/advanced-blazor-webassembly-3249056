@@ -85,9 +85,6 @@
 
     [CascadingParameter(Name="ShoppingCartCountModel")]
     private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
-
-    [CascadingParameter]
-    public Error? Error { get; set; }
 }
 @functions {
     protected override async Task OnInitializedAsync()
@@ -102,23 +99,17 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        try
+        if (!string.IsNullOrWhiteSpace(Slug))
         {
-            if (!string.IsNullOrWhiteSpace(Slug))
+            Product = await httpClient.GetFromJsonAsync<ProductModel?>(
+                string.Format("/api/product/by-slug/{0}", Slug)
+            );
+            if (Product != null)
             {
-                Product = await httpClient.GetFromJsonAsync<ProductModel?>(
-                    string.Format("/api/product/by-slug/{0}", Slug)
+                HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
+                        string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
                 );
-                if (Product != null)
-                {
-                    HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
-                            string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
-                    );
-                }
             }
-        }
-        catch (Exception ex) {
-            Error?.ProcessError(ex);
         }
     }
 

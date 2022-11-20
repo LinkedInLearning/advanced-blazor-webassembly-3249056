@@ -1,42 +1,37 @@
 ﻿@using MyBlazorShopHosted.Web.Client.Shared.Template
 @using MyBlazorShopHosted.Web.Client.Components
 @using System.Globalization
-@using Microsoft.Extensions.Localization
 @using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
 @page "/cart"
 @inject HttpClient httpClient
-@inject IStringLocalizer<ShoppingCart> localizer
-<PageTitle>@localizer["Title"]</PageTitle>
+<PageTitle>Shopping cart page</PageTitle>
 <HeadContent>
-    <meta name="description" content="@localizer["Title"] page" />
+    <meta name="description" content="Shopping cart page" />
+    <link href="/css/bigstarcollectables.cart.css" rel="stylesheet" />
 </HeadContent>
-<div id="vue-cart" class="quenched">
-    <main class="margin-horizontal:auto max-width:container padding-horizontal:32">
-        <div>
-            <h1 class="font-weight:500 @@mq-960--margin-bottom:24 color:blue-265f8e font-size:36 line-height:1_222 margin-bottom:12 margin-top:24">@localizer["Title"]</h1>
-            <div class="display:flex flex-direction:column color:blue-265f8e margin-bottom:12">
-                <TableTemplate HeaderNames="@TableHeaderNames">
-                    <RowTemplate>
-                        @if (ShoppingCartItems?.Items != null)
-                        {
-                            @foreach (var item in ShoppingCartItems.Items)
-                            {
-                                <ShoppingCartItem Item="item"></ShoppingCartItem>
-                            }
-                        }
-                    </RowTemplate>
-                </TableTemplate>
-            </div>
-        </div>
-    </main>
-</div>
+<section id="cart">
+    <h1>My Shopping Cart <small>(@(ShoppingCartItems?.Items != null ? ShoppingCartItems.Items.Sum(s => s.Quantity).ToString() : "0") item(s))</small></h1>
+    <form>
+    <TableTemplate HeaderNames="@TableHeaderNames">
+        <RowTemplate>
+            @if (ShoppingCartItems?.Items != null)
+            {
+                @foreach (var item in ShoppingCartItems.Items)
+                {
+                    <ShoppingCartItem Item="item"></ShoppingCartItem>
+                }
+            }
+        </RowTemplate>
+    </TableTemplate>
+    </form>
+</section>
 @code {
     private List<TableHeaderName> TableHeaderNames = new() {
-        new TableHeaderName("Product", 2),
-        new TableHeaderName("Price", 1),
-        new TableHeaderName("Quantity", 1),
-        new TableHeaderName("Total", 1),
-        new TableHeaderName("Remove", 1)
+        new TableHeaderName("Product"),
+        new TableHeaderName("Price"),
+        new TableHeaderName("Quantity"),
+        new TableHeaderName("Total"),
+        new TableHeaderName("Remove")
     };
 
     private ShoppingCartModel? ShoppingCartItems { get; set; }

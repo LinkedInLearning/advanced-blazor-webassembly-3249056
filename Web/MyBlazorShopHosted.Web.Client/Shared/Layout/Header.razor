@@ -1,36 +1,14 @@
 ﻿@using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
 @inject HttpClient httpClient
-<div id="vue-header" class="quenched">
-    <header class="border-bottom-color:neutral-000000 border-bottom-style:solid border-bottom-width:1 display:block padding-vertical:8">
-        <div class="margin-horizontal:auto max-width:container padding-horizontal:32">
-           <div class="display:flex position:relative align-items:center justify-content:center">
-               <a aria-label="Home" href="/" class="display:inline-block"><img alt="Binaryville logo" src="images/logo.svg" class="size:logo-152x78"></a>     
-               <NavMenu />
-                <div class="display:flex align-items:center pos-right:0 position:absolute">
-                <NavLink href="/cart" class="color:neutral-3a3a3d margin-left:8 padding:8 &amp;:hocus--color:orange-ff583d group
-                    display:inline-block
-                    position:relative
-                  " aria-label="Shopping Cart"><svg focusable="false" class="
-                    display:inline-block
-                    pointer-events:none
-                    svg-fill-color:current
-                    svg-fill-rule:even-odd
-                    vertical-align:bottom
-                      size:28
-                    ">
-                <use xlink:href="#cart"></use></svg>
-                </NavLink>
-                <span class="cart-count">
-                        @if (ShoppingCartCountModel != null)
-                        {
-                            @ShoppingCartCountModel.Count
-                        }
-                    </span>
-                </div>
-           </div>
-       </div>
-   </header>
-</div>
+@inject NavigationManager navigationManager
+<header id="banner">
+	<a href="./"><img src="/images/logomark-big-star-white.svg" width="43" height="50" alt="Big Star Collectibles"></a>
+    <NavMenu />
+    <button type="button" @onclick="RedirectToCart">
+		<img src="/images/icon-shopping-cart-v01-white.svg" width="36" height="33" alt="Cart Panel">
+        <span class="visually-hidden">(</span><span class="num">@(ShoppingCartCountModel != null ? ShoppingCartCountModel.Count.ToString() : "0")</span> <span class="visually-hidden">items)</span>
+	</button>
+</header>
 @code {
     [CascadingParameter(Name="ShoppingCartCountModel")]
     private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
@@ -48,5 +26,10 @@
             };
         }
         await base.OnInitializedAsync();
+    }
+
+    private void RedirectToCart()
+    {
+        navigationManager.NavigateTo("/cart");
     }
 }

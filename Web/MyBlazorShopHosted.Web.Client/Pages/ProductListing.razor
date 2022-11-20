@@ -10,10 +10,23 @@
 <HeadContent>
     <meta name="description" content="Product listing page" />
 </HeadContent>
-<Hero Title="@configuration["Hero:Title"]" Description="@configuration["Hero:Description"]" Image="@configuration["Hero:Image"]" BackgroundColor="@configuration["Hero:BackgroundColor"]"></Hero>
-
+<section id="products">
 @if (Products?.Any() ?? false)
 {
+    <dl class="prod-list">
+        <ErrorBoundary @ref="ProductErrorBoundary">
+        <ChildContent>
+            @foreach (var product in Products)
+            {
+                <ProductListingItem Product="product"></ProductListingItem>
+            }
+        </ChildContent>
+        <ErrorContent>
+            <p>There is a problem with the products</p>
+        </ErrorContent>
+        </ErrorBoundary>
+    </dl>
+    @*
     <main class="margin-horizontal:auto max-width:container padding-horizontal:32">
         <div id="vue-shop" class="margin-bottom:32 quenched">
             <div class="display:flex flex-grow:1 flex-wrap:wrap margin-bottom:-32 margin-horizontal:-16">
@@ -42,7 +55,9 @@
             </div>
         </div>
     </main>
+    *@
 }
+</section>
 
 @code {
     private ErrorBoundary? ProductErrorBoundary;

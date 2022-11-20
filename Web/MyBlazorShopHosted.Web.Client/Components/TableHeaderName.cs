@@ -2,14 +2,10 @@
 {
     public class TableHeaderName
     {
-        public TableHeaderName(string name, int colspan = 1)
+        public TableHeaderName(string name)
         {
             Name = name;
-            Colspan = colspan;
         }
-
-        public int Colspan { get; }
-
         public string Name { get;}
     }
 }
