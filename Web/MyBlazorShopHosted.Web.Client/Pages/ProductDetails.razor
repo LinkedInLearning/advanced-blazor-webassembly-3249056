@@ -11,66 +11,58 @@
     <PageTitle>@Product.Name</PageTitle>
     <HeadContent>
         <meta name="description" content="@Product.Name product page" />
+        <link href="/css/bigstarcollectables.product.css" rel="stylesheet" />
     </HeadContent>
-}
-   <main class="margin-horizontal:auto max-width:container padding-horizontal:32">
-       <div id="vue-product-detail" class="quenched">
-           <div class="margin-bottom:32 @@mq-960--margin-top:32">
-               <div class="display:flex flex-wrap:wrap flex-grow:1 margin-bottom:-32 margin-horizontal:-16">
-                @if (Product == null)
-                {
-                    <div class="display:flex flex-direction:column flex-grow:0 flex-shrink:0 margin-bottom:32 padding-horizontal:16 width:100 @@mq-768--width:50">
-                        <p>Not found</p>
-                    </div>
-                }
-                else {
-                    <div class="display:flex flex-direction:column flex-grow:0 flex-shrink:0 margin-bottom:32 padding-horizontal:16 width:100 @@mq-768--width:50">
-                       <img src="images/@Product.Image" alt="Photo of @Product.Name" class="margin-bottom:32 max-width:100" />
-                   </div>
-                   <div class="display:flex flex-direction:column flex-grow:0 flex-shrink:0 margin-bottom:32 padding-horizontal:16 width:100 @@mq-768--width:50">
-                       <h1 class="font-weight:500 font-size:28 line-height:1_142 margin-bottom:24 @@mq-768--font-size:32 @@mq-768--line-height:1_125">@Product.Name</h1> 
-                       <p class="font-weight:500 font-size:28 line-height:1_142 margin-bottom:24">@Product.Price.ToString("c")</p>
-                        <div class="display:flex flex-wrap:wrap">
-                            <EditForm Model="ProductAddToCartModel" OnValidSubmit="AddToCartAsync">
-                                <DataAnnotationsValidator />
-                                <ValidationMessage For="() => ProductAddToCartModel.Quantity" />
+    <nav aria-label="Breadcrumb">
+        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <a href="/" itemprop="item"><span itemprop="name">Shop</span></a>
+                <meta itemprop="position" content="1">
+                <span aria-hidden="true">&rsaquo;</span>
+            </li>
 
-                                <InputNumber @bind-Value="ProductAddToCartModel.Quantity" class="padding:12 &:hocus--border-color:neutral-000000 appearance:none background-color:neutral-ffffff border-color:neutral-4c5b5c border-radius:0 border-style:solid border-width:1 color:neutral-483e40 min-height:form-input width:100" autocomplete="off" />
-                                <button class="display:inline-block padding-horizontal:24 padding-horizontal:24 &amp;:hocus--background-color:yellow-f0c808 background-color:orange-ff583d color:neutral-222224 font-size:18 font-weight:700 line-height:1 margin-bottom:32 padding-vertical:12 padding-vertical:16">
-                                    @if (HasProductInCart)
-                                    {
-                                        <span>
-                                            Added to cart.
-                                        @if (ProductAddToCartModel.Quantity.HasValue)
-                                            {
-                                                <text>Add @ProductAddToCartModel.Quantity more?</text>
-                                            }
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span>
-                                            Add @ProductAddToCartModel.Quantity to Cart?
-                                        </span>
-                                    }
-                                </button>
-                            </EditForm>                            
-                       </div>
-                        @if (AllProducts != null)
-                        {
-                            <ul>
-                                @foreach (var product in AllProducts)
-                                {
-                                    <li><a href="@product.FullUrl">@product.Name</a></li>
-                                }
-                            </ul>
-                        }
-                   </div>               
-               }
-               </div>
-           </div>
-       </div>
-    </main>
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <a href="/product/@Product.Sku" itemprop="item" aria-current="page"><span itemprop="name">@Product.Name</span></a>
+                <meta itemprop="position" content="2">
+            </li>
+        </ol>
+    </nav>
+    <section id="product" itemscope itemtype="https://schema.org/Product">
+        <header>
+            <div class="wrapper">
+                <img src="/images/@Product.Image" alt="@Product.Name" style="padding: 0 9.917%;">
+            </div>
+            <h1 itemprop="name">@Product.Name</h1>
+            <b itemprop="offers" itemscope itemtype="https://schema.org/Offer">@Product.Price.ToString("c")</b>
+            <p class="product-id">Product ID: <span itemprop="productID">@Product.Sku</span></p>
+        </header>
+        <EditForm Model="ProductAddToCartModel" OnValidSubmit="AddToCartAsync">
+            <DataAnnotationsValidator />
+            <ValidationMessage For="() => ProductAddToCartModel.Quantity" />
+            <div>
+                <label for="product-qty">Quantity:</label>
+                <div class="qty-widget">
+                    <InputNumber @bind-Value="ProductAddToCartModel.Quantity" id="product-qty" type="number" min="1" required />
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="button lg solid gold">Add to cart</button>
+            </div>
+        </EditForm>
+    </section>
+    @if (AllProducts?.Any() ?? false)
+    {
+        <aside id="also">
+            <h1>Other products:</h1>
+            <dl class="prod-list">
+                @foreach (var product in AllProducts)
+                {
+                    <ProductListingItem Product="product"></ProductListingItem>
+                }
+            </dl>
+        </aside>
+    }
+}
 @code {
     private ProductModel? Product { get; set; }
 
@@ -94,6 +86,7 @@
             "/api/product"
         );
 
+
         await base.OnInitializedAsync();
     }
 
@@ -110,6 +103,7 @@
                         string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
                 );
             }
+            ProductAddToCartModel = new ProductAddToCartModel();
         }
     }
 
@@ -120,32 +114,32 @@
             // Add to shopping cart
             if (!HasProductInCart)
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, "/api/shopping-cart");
-                request.Content = new StringContent(JsonSerializer.Serialize(new ShoppingCartAddModel
+                await httpClient.PostAsJsonAsync<ShoppingCartAddModel>(
+                    "/api/shopping-cart",
+                    new ShoppingCartAddModel
                     {
                         ProductSku = Product.Sku,
-                        Quantity = ProductAddToCartModel.Quantity ?? 1
-                    }), System.Text.Encoding.UTF8, "application/json");
-
-                await httpClient.SendAsync(request);
+                        Quantity = ProductAddToCartModel.Quantity
+                    }
+                );
             }
             else
             {
-                var request = new HttpRequestMessage(HttpMethod.Put, "/api/shopping-cart");
-                request.Content = new StringContent(JsonSerializer.Serialize(new ShoppingCartAddModel
+                await httpClient.PutAsJsonAsync<ShoppingCartAddModel>(
+                    "/api/shopping-cart",
+                    new ShoppingCartAddModel
                     {
                         ProductSku = Product.Sku,
-                        Quantity = ProductAddToCartModel.Quantity ?? 1
-                    }), System.Text.Encoding.UTF8, "application/json");
-
-                await httpClient.SendAsync(request);
+                        Quantity = ProductAddToCartModel.Quantity
+                    }
+                );
             }
 
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                 string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
             );
 
-            ProductAddToCartModel.Quantity = null;
+            ProductAddToCartModel.Quantity = 1;
 
             if (ShoppingCartCountModel != null) {
                 ShoppingCartCountModel.OnCountChange();

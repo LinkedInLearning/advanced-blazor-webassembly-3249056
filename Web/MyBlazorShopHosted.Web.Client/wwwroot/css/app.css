@@ -9,34 +9,6 @@
     color: #222224;
     font-weight:500;
 }
-header {
-    min-width:450px;
-    overflow-x:auto;
-}
-.links {
-    margin-right:8px;
-}
-.links a {
-    font-weight: 500;
-    color: #3a3a3d;
-    font-size: 18px;
-    padding: 12px;
-}
-.links a.active {
-    text-decoration: underline;
-    color: #ff583d;
-}
-
-.nav-link {
-    font-weight:500;
-    color: #3a3a3d;
-    font-size:18px;
-    padding: 12px;
-}
-.nav-link.active {
-    text-decoration:underline;
-    color: #ff583d;
-}
 .loading-progress {
     position: relative;
     display: block;
@@ -60,6 +32,7 @@ header {
     position: absolute;
     text-align: center;
     font-weight: bold;
+    font-size: 14px;
     inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
 }
 .loading-progress-text:after {

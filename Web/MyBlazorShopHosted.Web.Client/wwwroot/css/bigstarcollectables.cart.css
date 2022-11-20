@@ -44,7 +44,7 @@
 	}
 
 #cart table:first-of-type { /* Items in cart */
-	width: min(680px, 100% - 420px);
+	width: 100%;
 	}
 
 #cart table:first-of-type > caption {

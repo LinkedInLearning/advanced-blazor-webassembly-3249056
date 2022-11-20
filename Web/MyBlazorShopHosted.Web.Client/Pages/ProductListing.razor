@@ -10,55 +10,62 @@
 <HeadContent>
     <meta name="description" content="Product listing page" />
 </HeadContent>
-<section id="products">
 @if (Products?.Any() ?? false)
 {
-    <dl class="prod-list">
-        <ErrorBoundary @ref="ProductErrorBoundary">
-        <ChildContent>
-            @foreach (var product in Products)
-            {
-                <ProductListingItem Product="product"></ProductListingItem>
-            }
-        </ChildContent>
-        <ErrorContent>
-            <p>There is a problem with the products</p>
-        </ErrorContent>
-        </ErrorBoundary>
-    </dl>
-    @*
-    <main class="margin-horizontal:auto max-width:container padding-horizontal:32">
-        <div id="vue-shop" class="margin-bottom:32 quenched">
-            <div class="display:flex flex-grow:1 flex-wrap:wrap margin-bottom:-32 margin-horizontal:-16">
-                <div class="display:flex flex-direction:column flex-grow:0 flex-shrink:0 margin-bottom:32 padding-horizontal:16 width:100 @@mq-768--width:100">
-                    <ErrorBoundary @ref="ProductErrorBoundary">
-                    <ChildContent>
-                        <ul class="display:flex flex-grow:1 flex-wrap:wrap margin-bottom:-32 margin-horizontal:-16">
-                            @foreach(var product in Products)
-                            {
-                                <ProductListingItem Product="product"></ProductListingItem>
-                            }                        
-                        </ul>
-                       </ChildContent>
-                       <ErrorContent>
-                           <p>There is a problem with the products</p>
-                       </ErrorContent>
-                    </ErrorBoundary>
-                    @if (TotalPageCount > 1) {
-                        <ul class="pages">
-                            @for (var page = 1; page <= TotalPageCount; page++) {
-                                <li><a href="@navigationManager.GetUriWithQueryParameter("page", page)">@(page)</a></li>
-                            }
-                        </ul>
-                    }
-                </div>
-            </div>
-        </div>
-    </main>
-    *@
-}
-</section>
+    <section id="products">
+        <header>
+            <h1>Products</h1>
+            <nav aria-label="Breadcrumb">
+                <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+                    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <a href="/" itemprop="item"><span itemprop="name">Shop</span></a>
+                        <meta itemprop="position" content="1">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </li>
+                </ol>
+            </nav>
+        </header>
 
+        <dl class="prod-list">
+            <ErrorBoundary @ref="ProductErrorBoundary">
+                <ChildContent>
+                    @foreach (var product in Products)
+                    {
+                        <ProductListingItem Product="product"></ProductListingItem>
+                    }
+                </ChildContent>
+                <ErrorContent>
+                    <p>There is a problem with the products</p>
+                </ErrorContent>
+            </ErrorBoundary>
+        </dl>    
+        @if (TotalPageCount > 1)
+        {
+            <nav aria-label="Pagination">
+                <ul>
+                    @for (var p = 1; p<= TotalPageCount; p++)
+                    {
+                        var linkAttributes = new Dictionary<string, object>();
+
+                        var link = "/";
+                        if (p == (Page ?? 1))
+                        {
+                            linkAttributes.Add("aria-current", "page");
+                        }
+                        if (p >= 2)
+                        {
+                            link += string.Format("?page={0}", p);
+                        }
+
+                        linkAttributes.Add("href", link);
+
+                        <li><a @attributes="linkAttributes"><span class="visually-hidden">Page</span> @p</a></li>
+                    }
+			    </ul>
+		    </nav>
+        }
+    </section>
+}
 @code {
     private ErrorBoundary? ProductErrorBoundary;
 
