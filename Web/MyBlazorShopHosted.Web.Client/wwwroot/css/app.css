@@ -12,8 +12,8 @@
 .loading-progress {
     position: relative;
     display: block;
-    width: 8rem;
-    height: 8rem;
+    width: 24rem;
+    height: 24rem;
     margin: 20vh auto 1rem auto;
 }
 .loading-progress circle {
@@ -32,8 +32,8 @@
     position: absolute;
     text-align: center;
     font-weight: bold;
-    font-size: 14px;
-    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+    font-size: 42px;
+    inset: calc(20vh + 9rem) 0 auto 0.2rem;
 }
 .loading-progress-text:after {
     content: var(--blazor-load-percentage-text, "Loading");

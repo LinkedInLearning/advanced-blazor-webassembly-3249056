@@ -36,6 +36,7 @@
             <b itemprop="offers" itemscope itemtype="https://schema.org/Offer">@Product.Price.ToString("c")</b>
             <p class="product-id">Product ID: <span itemprop="productID">@Product.Sku</span></p>
         </header>
+        <p itemprop="description">@Product.Description</p>
         <EditForm Model="ProductAddToCartModel" OnValidSubmit="AddToCartAsync">
             <DataAnnotationsValidator />
             <ValidationMessage For="() => ProductAddToCartModel.Quantity" />

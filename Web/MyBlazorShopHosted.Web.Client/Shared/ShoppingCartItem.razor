@@ -10,6 +10,9 @@
             </a>
         </td>
         <td class="name"><a href="@Item.Product.FullUrl">@Item.Product.Name</a></td>
+        <td class="dets">
+            <p>Product ID: @Item.Product.Sku</p>
+        </td>
         <td class="qty">@Item.Quantity</td>
         <td class="total">@Item.TotalPrice.ToString("c")</td>
         <td class="action">
