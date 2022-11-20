@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 
 namespace MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
 {
     public class ShoppingCartCountModel
     {
-        public int Count { get; set; }
+        public int Count { get; private set; }
 
-        public event Action? CountChange;
+        public event Action? UpdateCart;
 
-        public void OnCountChange()
+        public async Task OnUpdateCartAsync(HttpClient httpClient)
         {
-            CountChange?.Invoke();
+            Count = await httpClient.GetFromJsonAsync<int>(
+                "/api/shopping-cart/count"
+            );
+            UpdateCart?.Invoke();
         }
     }
 }

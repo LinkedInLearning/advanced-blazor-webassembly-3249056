@@ -17,11 +17,9 @@
     {
         if (ShoppingCartCountModel != null)
         {
-            ShoppingCartCountModel.CountChange += async() =>
+            ShoppingCartCountModel.UpdateCart += () =>
             {
-                ShoppingCartCountModel.Count = await httpClient.GetFromJsonAsync<int>(
-                    "/api/shopping-cart/count"
-                );
+                // Refresh the component as the cart has been updated
                 StateHasChanged();
             };
         }
@@ -30,6 +28,7 @@
 
     private void RedirectToCart()
     {
+        // Redirect to cart page
         navigationManager.NavigateTo("/cart");
     }
 }

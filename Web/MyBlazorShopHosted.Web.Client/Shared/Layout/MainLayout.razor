@@ -14,9 +14,8 @@
     protected override async Task OnInitializedAsync()
     {
         ShoppingCartCountModel = new ShoppingCartCountModel();
-        ShoppingCartCountModel.Count = await httpClient.GetFromJsonAsync<int>(
-            "/api/shopping-cart/count"
-        );
+        await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
+
         await base.OnInitializedAsync();
     }
 }

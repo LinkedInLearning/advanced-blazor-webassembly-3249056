@@ -143,7 +143,7 @@
             ProductAddToCartModel.Quantity = 1;
 
             if (ShoppingCartCountModel != null) {
-                ShoppingCartCountModel.OnCountChange();
+                await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
             } 
 
             navigationManager.NavigateTo("/cart");

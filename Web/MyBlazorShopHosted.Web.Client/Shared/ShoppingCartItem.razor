@@ -39,10 +39,9 @@
                 )
             );
 
-            Item = null;
-
             if (ShoppingCartCountModel != null) {
-                ShoppingCartCountModel.OnCountChange();
+                // Item deleted, so call the update cart event
+                await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
             }
         }
     }

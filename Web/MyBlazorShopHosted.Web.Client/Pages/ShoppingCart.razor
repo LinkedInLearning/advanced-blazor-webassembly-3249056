@@ -10,7 +10,7 @@
     <link href="/css/bigstarcollectables.cart.css" rel="stylesheet" />
 </HeadContent>
 <section id="cart">
-    <h1>Shopping Cart</h1>
+    <h1>Shopping Cart@(ShoppingCartCountModel != null ? string.Format(" ({0} item{1})", ShoppingCartCountModel.Count, ShoppingCartCountModel.Count != 1 ? "s" : "") : "")</h1>
     <form>
     <TableTemplate HeaderNames="@TableHeaderNames">
         <RowTemplate>
@@ -36,11 +36,28 @@
 
     private ShoppingCartModel? ShoppingCartItems { get; set; }
 
+    [CascadingParameter(Name = "ShoppingCartCountModel")]
+    private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         ShoppingCartItems = await httpClient.GetFromJsonAsync<ShoppingCartModel?>(
            "/api/shopping-cart"
         );
+        if (ShoppingCartCountModel != null)
+        {
+            ShoppingCartCountModel.UpdateCart += async () =>
+            {
+                // Update shopping cart when the count has changed.
+                ShoppingCartItems = await httpClient.GetFromJsonAsync<ShoppingCartModel?>(
+                    "/api/shopping-cart"
+                );
+
+                // Refresh state
+                StateHasChanged();
+            };
+        }
+
         await base.OnInitializedAsync();
     }
 }
