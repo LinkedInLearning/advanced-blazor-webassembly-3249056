@@ -938,6 +938,12 @@ body {
         display: flex;
     }
 
+    #banner .time {
+        color: var(--color-whitesmoke);
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
     #banner nav {
         align-self: stretch;
         display: flex;
