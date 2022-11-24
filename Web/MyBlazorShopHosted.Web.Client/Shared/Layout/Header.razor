@@ -3,6 +3,10 @@
 @inject NavigationManager navigationManager
 <header id="banner">
 	<a href="./"><img src="/images/logomark-big-star-white.svg" width="43" height="50" alt="Big Star Collectibles"></a>
+    @if (!string.IsNullOrWhiteSpace(TimeNow))
+    {
+        <p class="time">@TimeNow</p>
+    }
     <NavMenu />
     <button type="button" @onclick="RedirectToCart">
 		<img src="/images/icon-shopping-cart-v01-white.svg" width="36" height="33" alt="Cart Panel">
@@ -12,6 +16,8 @@
 @code {
     [CascadingParameter(Name="ShoppingCartCountModel")]
     private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
+
+    private string? TimeNow { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
