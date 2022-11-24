@@ -1,6 +1,7 @@
 ﻿@using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
 <header id="banner">
 	<a href="./"><img src="/images/logomark-big-star-white.svg" width="43" height="50" alt="Big Star Collectibles"></a>
     @if (!string.IsNullOrWhiteSpace(TimeNow))
@@ -21,6 +22,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var offsetMinutes = await jsRuntime.InvokeAsync<double>("GetLocalOffsetMinutes");
+        TimeNow = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(offsetMinutes)).ToString("HH:mm");
+
         if (ShoppingCartCountModel != null)
         {
             ShoppingCartCountModel.UpdateCart += () =>

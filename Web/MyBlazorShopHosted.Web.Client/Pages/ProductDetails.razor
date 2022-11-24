@@ -6,6 +6,7 @@
 @inject NavigationManager navigationManager
 @inject HttpClient httpClient
 @inject IConfiguration configuration
+@inject IJSRuntime jsRuntime
 @if (Product != null)
 {
     <PageTitle>@Product.Name</PageTitle>
@@ -135,6 +136,8 @@
                     }
                 );
             }
+
+            await jsRuntime.InvokeVoidAsync("AddToCart", Product.Name);
 
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                 string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
