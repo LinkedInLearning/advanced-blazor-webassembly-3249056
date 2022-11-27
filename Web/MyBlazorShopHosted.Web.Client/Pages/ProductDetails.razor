@@ -79,6 +79,9 @@
 
     [CascadingParameter(Name="ShoppingCartCountModel")]
     private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
+
+    private IJSObjectReference? Module { get; set; }
+
 }
 @functions {
     protected override async Task OnInitializedAsync()
@@ -136,7 +139,12 @@
                 );
             }
 
-            //await jsRuntime.InvokeVoidAsync("AddToCart", Product.Name);
+            if (Module == null)
+            {
+                Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/JSInterlop.js");
+            }
+
+            await Module.InvokeVoidAsync("AddToCart", Product.Name);
 
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                 string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
