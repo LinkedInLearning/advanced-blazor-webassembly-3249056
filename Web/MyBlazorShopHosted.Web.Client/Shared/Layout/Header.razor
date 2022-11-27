@@ -22,8 +22,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var offsetMinutes = await jsRuntime.InvokeAsync<double>("GetLocalOffsetMinutes");
-        TimeNow = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(offsetMinutes)).ToString("HH:mm");
+        //var offsetMinutes = await jsRuntime.InvokeAsync<double>("GetLocalOffsetMinutes");
+        //TimeNow = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(offsetMinutes)).ToString("HH:mm");
 
         if (ShoppingCartCountModel != null)
         {
