@@ -144,10 +144,8 @@
 
             if (Module == null)
             {
-                Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/JSInterlop.js");
+                Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/JSInterlopElement.js");
             }
-
-
 
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                 string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
