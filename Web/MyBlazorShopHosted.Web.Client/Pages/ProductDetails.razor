@@ -51,7 +51,7 @@
                 <button type="submit" class="button lg solid gold">Add to cart</button>
             </div>
         </EditForm>
-        <div>
+        <div style="display: none;">
             <span class="added-to-cart">Added to Cart</span>
         </div>
     </section>
@@ -159,8 +159,6 @@
                 // Signal that the cart has been updated.
                 await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
             }
-
-            //await Task.Delay(new TimeSpan(0, 0, 3)); // Wait 3 seconds
 
             navigationManager.NavigateTo("/cart");
         }
