@@ -244,7 +244,18 @@
 	margin-left: calc(-1 * var(--dist-min-cont-edge));
 	padding-right: max(100% - 335px + var(--dist-min-cont-edge), var(--dist-min-cont-edge));
 	padding-left: var(--dist-min-cont-edge);
-	}
+}
+
+#product span.added-to-cart {
+	width: 100%;
+	--color-background-static: var(--color-danger);
+	align-items: center;
+	display: inline-flex;
+	margin-top: 15px;
+	font-size: 2.2rem;
+	font-weight: 700;
+	justify-content: center;
+}
 
 
 /*  2. You might also like  */

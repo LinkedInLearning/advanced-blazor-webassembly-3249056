@@ -51,6 +51,9 @@
                 <button type="submit" class="button lg solid gold">Add to cart</button>
             </div>
         </EditForm>
+        <div>
+            <span class="added-to-cart">Added to Cart</span>
+        </div>
     </section>
     @if (AllProducts?.Any() ?? false)
     {
@@ -144,7 +147,7 @@
                 Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/JSInterlop.js");
             }
 
-            await Module.InvokeVoidAsync("AddToCart", Product.Name);
+
 
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                 string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
@@ -155,7 +158,9 @@
             if (ShoppingCartCountModel != null) {
                 // Signal that the cart has been updated.
                 await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
-            } 
+            }
+
+            //await Task.Delay(new TimeSpan(0, 0, 3)); // Wait 3 seconds
 
             navigationManager.NavigateTo("/cart");
         }
