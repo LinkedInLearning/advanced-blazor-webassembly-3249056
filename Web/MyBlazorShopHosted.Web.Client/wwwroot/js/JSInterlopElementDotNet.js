@@ -10,8 +10,10 @@
     }
 }
 
-export function RedirectToCart(dotNetReference) {
-    dotNetReference.invokeMethodAsync("RedirectToCartAsync").then(function () {
-        window.location.href = "/cart";
-    });
+export function JSDelayRedirect() {
+    DotNet.invokeMethodAsync("MyBlazorShopHosted.Web.Client", "RazorDelayRedirectAsync");
+}
+
+export function JSRedirectToCart(dotNetReference) {
+    dotNetReference.invokeMethod("RazorRedirectToCart");
 }

@@ -163,14 +163,18 @@
 
             await Module.InvokeVoidAsync("ToggleElement", AddToCartRef);
             await Module.InvokeVoidAsync("ToggleElement", AddedToCartRef);
-            await RedirectToCartAsync();
+            await RazorDelayRedirectAsync();
+            RazorRedirectToCart();
         }
     }    
 
-    public async Task RedirectToCartAsync()
+    public async static Task RazorDelayRedirectAsync()
     {
         await Task.Delay(new TimeSpan(0, 0, 3));
+    }
 
+    public void RazorRedirectToCart()
+    {
         navigationManager.NavigateTo("/cart");
     }
 }
