@@ -11,7 +11,7 @@
 }
 
 export function JSDelayRedirect() {
-    DotNet.invokeMethodAsync("MyBlazorShopHosted.Web.Client", "RazorDelayRedirectAsync");
+    return DotNet.invokeMethodAsync("MyBlazorShopHosted.Web.Client", "RazorDelayRedirectAsync");
 }
 
 export function JSRedirectToCart(dotNetReference) {
