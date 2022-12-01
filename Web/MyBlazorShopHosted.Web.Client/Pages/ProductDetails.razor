@@ -161,18 +161,23 @@
                 await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
             }
 
+
             await Module.InvokeVoidAsync("ToggleElement", AddToCartRef);
             await Module.InvokeVoidAsync("ToggleElement", AddedToCartRef);
-            await RazorDelayRedirectAsync();
-            RazorRedirectToCart();
+            await Module.InvokeVoidAsync("JSDelayRedirect");
+
+            var dotNetObjectReference = DotNetObjectReference.Create(this);
+            await Module.InvokeVoidAsync("JSRedirectToCart", dotNetObjectReference);
         }
     }    
 
+    [JSInvokable]
     public async static Task RazorDelayRedirectAsync()
     {
         await Task.Delay(new TimeSpan(0, 0, 3));
     }
 
+    [JSInvokable]
     public void RazorRedirectToCart()
     {
         navigationManager.NavigateTo("/cart");
