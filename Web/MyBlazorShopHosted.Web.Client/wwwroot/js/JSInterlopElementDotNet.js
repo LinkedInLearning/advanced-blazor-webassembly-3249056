@@ -9,3 +9,9 @@
         element.style.display = "none";
     }
 }
+
+export function RedirectToCart(dotNetReference) {
+    dotNetReference.invokeMethodAsync("RedirectToCartAsync").then(function () {
+        window.location.href = "/cart";
+    });
+}

@@ -147,7 +147,7 @@
 
             if (Module == null)
             {
-                Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/JSInterlopElement.js");
+                Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/JSInterlopElementDotNet.js");
             }
 
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
@@ -163,9 +163,14 @@
 
             await Module.InvokeVoidAsync("ToggleElement", AddToCartRef);
             await Module.InvokeVoidAsync("ToggleElement", AddedToCartRef);
-            await Task.Delay(new TimeSpan(0, 0, 3));
-
-            navigationManager.NavigateTo("/cart");
+            await RedirectToCartAsync();
         }
+    }    
+
+    public async Task RedirectToCartAsync()
+    {
+        await Task.Delay(new TimeSpan(0, 0, 3));
+
+        navigationManager.NavigateTo("/cart");
     }
 }
