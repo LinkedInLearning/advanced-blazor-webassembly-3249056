@@ -39,6 +39,11 @@
 @functions {
     protected override async Task OnParametersSetAsync()
     {
+        if (StreamImageModule == null)
+        {
+            StreamImageModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/StreamImage.js");
+        }
+
         if (Product != null)
         {
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
@@ -46,11 +51,16 @@
             );
         }
 
-        if (StreamImageModule == null)
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task<Stream?> StreamImageAsync()
+    {
+        if (Product == null)
         {
-            StreamImageModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/StreamImage.js");
+            return null;
         }
 
-        await base.OnParametersSetAsync();
+        return await httpClient.GetStreamAsync("/images/" + Product.Image);        
     }
 }
