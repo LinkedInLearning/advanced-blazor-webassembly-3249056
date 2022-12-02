@@ -39,16 +39,16 @@
 @functions {
     protected override async Task OnParametersSetAsync()
     {
+        if (StreamImageModule == null)
+        {
+            StreamImageModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/StreamImage.js");
+        }
+
         if (Product != null)
         {
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                     string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
             );
-        }
-
-        if (StreamImageModule == null)
-        {
-            StreamImageModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/StreamImage.js");
         }
 
         await base.OnParametersSetAsync();
