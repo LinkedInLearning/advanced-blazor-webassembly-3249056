@@ -6,7 +6,6 @@
 @inject NavigationManager navigationManager
 @inject HttpClient httpClient
 @inject IConfiguration configuration
-@inject IJSRuntime jsRuntime
 @if (Product != null)
 {
     <PageTitle>@Product.Name</PageTitle>
@@ -30,9 +29,13 @@
     </nav>
     <section id="product" itemscope itemtype="https://schema.org/Product">
         <header>
-            <div class="wrapper">
-                <img src="/images/@Product.Image" alt="@Product.Name" style="padding: 0 9.917%;">
-            </div>
+            <button class="button solid gold">Change image</button>
+            @if (!string.IsNullOrWhiteSpace(ImageSource))
+            {
+                <div class="wrapper">
+                    <img src="@ImageSource" alt="@Product.Name" style="padding: 0 9.917%;">
+                </div>
+            }
             <h1 itemprop="name">@Product.Name</h1>
             <b itemprop="offers" itemscope itemtype="https://schema.org/Offer">@Product.Price.ToString("c")</b>
             <p class="product-id">Product ID: <span itemprop="productID">@Product.Sku</span></p>
@@ -47,13 +50,10 @@
                     <InputNumber @bind-Value="ProductAddToCartModel.Quantity" id="product-qty" type="number" min="1" required />
                 </div>
             </div>
-            <div @ref="AddToCartRef">
+            <div>
                 <button type="submit" class="button lg solid gold">Add to cart</button>
             </div>
         </EditForm>
-        <div style="display: none;" @ref="AddedToCartRef">
-            <span class="added-to-cart">Added to Cart</span>
-        </div>
     </section>
     @if (AllProducts?.Any() ?? false)
     {
@@ -83,11 +83,7 @@
     [CascadingParameter(Name="ShoppingCartCountModel")]
     private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
 
-    private IJSObjectReference? Module { get; set; }
-
-    private ElementReference AddToCartRef;
-
-    private ElementReference AddedToCartRef;
+    private string? ImageSource = "";
 }
 @functions {
     protected override async Task OnInitializedAsync()
@@ -112,7 +108,9 @@
                 HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                         string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
                 );
+                ImageSource = "/images/" + Product.Image;
             }
+
             ProductAddToCartModel = new ProductAddToCartModel();
         }
     }
@@ -145,11 +143,6 @@
                 );
             }
 
-            if (Module == null)
-            {
-                Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/JSInterlopElementDotNet.js");
-            }
-
             HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                 string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
             );
@@ -161,25 +154,8 @@
                 await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
             }
 
+            navigationManager.NavigateTo("/cart");
 
-            await Module.InvokeVoidAsync("ToggleElement", AddToCartRef);
-            await Module.InvokeVoidAsync("ToggleElement", AddedToCartRef);
-            await Module.InvokeVoidAsync("JSDelayRedirect");
-
-            var dotNetObjectReference = DotNetObjectReference.Create(this);
-            await Module.InvokeVoidAsync("JSRedirectToCart", dotNetObjectReference);
         }
     }    
-
-    [JSInvokable]
-    public async static Task RazorDelayRedirectAsync()
-    {
-        await Task.Delay(new TimeSpan(0, 0, 3));
-    }
-
-    [JSInvokable]
-    public void RazorRedirectToCart()
-    {
-        navigationManager.NavigateTo("/cart");
-    }
 }
