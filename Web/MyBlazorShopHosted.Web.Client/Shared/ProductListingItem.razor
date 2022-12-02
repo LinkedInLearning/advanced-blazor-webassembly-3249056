@@ -53,4 +53,14 @@
 
         await base.OnParametersSetAsync();
     }
+
+    private async Task<Stream?> StreamImageAsync()
+    {
+        if (Product == null)
+        {
+            return null;
+        }
+
+        return await httpClient.GetStreamAsync("/images/" + Product.Image);        
+    }
 }
