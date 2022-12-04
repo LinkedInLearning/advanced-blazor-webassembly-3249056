@@ -29,13 +29,9 @@
     </nav>
     <section id="product" itemscope itemtype="https://schema.org/Product">
         <header>
-            <button class="button solid gold" @onclick="ChangeImage">Change image</button>
-            @if (!string.IsNullOrWhiteSpace(ImageSource))
-            {
-                <div class="wrapper">
-                    <img src="@ImageSource" alt="@Product.Name" style="padding: 0 9.917%;">
-                </div>
-            }
+            <div class="wrapper">
+                <img src="/images/@(Product.Image)" alt="@Product.Name" style="padding: 0 9.917%;">
+            </div>            
             <h1 itemprop="name">@Product.Name</h1>
             <b itemprop="offers" itemscope itemtype="https://schema.org/Offer">@Product.Price.ToString("c")</b>
             <p class="product-id">Product ID: <span itemprop="productID">@Product.Sku</span></p>
@@ -82,8 +78,6 @@
 
     [CascadingParameter(Name="ShoppingCartCountModel")]
     private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
-
-    private string? ImageSource = "";
 }
 @functions {
     protected override async Task OnInitializedAsync()
@@ -108,16 +102,10 @@
                 HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                         string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
                 );
-                ImageSource = "/images/" + Product.Image;
             }
 
             ProductAddToCartModel = new ProductAddToCartModel();
         }
-    }
-
-    private void ChangeImage()
-    {
-        ImageSource = "/images/lil-monsters-pillow-blade.svg";
     }
 
     private async Task AddToCartAsync()
