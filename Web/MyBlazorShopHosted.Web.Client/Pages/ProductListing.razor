@@ -27,17 +27,10 @@
         </header>
 
         <dl class="prod-list">
-            <ErrorBoundary @ref="ProductErrorBoundary">
-                <ChildContent>
-                    @foreach (var product in Products)
-                    {
-                        <ProductListingItem Product="product"></ProductListingItem>
-                    }
-                </ChildContent>
-                <ErrorContent>
-                    <p>There is a problem with the products</p>
-                </ErrorContent>
-            </ErrorBoundary>
+            @foreach (var product in Products)
+            {
+                <ProductListingItem Product="product"></ProductListingItem>
+            }
         </dl>    
         @if (TotalPageCount > 1)
         {
@@ -67,8 +60,6 @@
     </section>
 }
 @code {
-    private ErrorBoundary? ProductErrorBoundary;
-
     private IList<ProductModel>? Products { get; set; }
 
     [Parameter, SupplyParameterFromQuery]
@@ -79,8 +70,6 @@
 @functions {
     protected override async Task OnParametersSetAsync()
     {
-        ProductErrorBoundary?.Recover();
-
         var productListingConfig = configuration.GetSection("ProductListing");
         var pageSize = productListingConfig.GetValue<int>("PageSize");
 
