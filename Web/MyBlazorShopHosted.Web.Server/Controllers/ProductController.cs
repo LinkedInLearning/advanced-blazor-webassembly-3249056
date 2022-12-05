@@ -31,6 +31,13 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
             return _productService.GetAll(size.Value, page);
         }
 
+        [HttpGet("count")]
+        public int GetCount()
+        {
+            // Return count
+            return _productService.GetCount();
+        }
+
         [HttpGet("total-page-count")]
         public int GetTotalPageCount(int size)
         {

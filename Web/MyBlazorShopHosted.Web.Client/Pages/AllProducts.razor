@@ -3,8 +3,40 @@
 @using MyBlazorShopHosted.Web.Client.Shared.Layout
 @inject HttpClient httpClient
 <div class="all-products">
-@if (Products != null)
-{
+    <h1>First table</h1>
+    @if (Products != null)
+    {
+        <table class="all-products">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+                <tbody>
+                @foreach (var product in Products)
+                {
+                    <tr>
+                        <td>
+                            <img src="/images/@product.Image?a=@product.GetHashCode()" width="300" />
+                        </td>
+                        <td>
+                            <strong>@product.Name</strong>
+                        </td>
+                        <td>
+                            @product.Description
+                        </td>
+                        <td>
+                            <strong>@product.Price.ToString("c")</strong>
+                        </td>
+                    </tr>
+                }                
+                </tbody>
+        </table>
+    }
+    <h2>Second Products</h2>
     <table class="all-products">
         <thead>
             <tr>
@@ -14,53 +46,55 @@
                 <th>Price</th>
             </tr>
         </thead>
-            <tbody>
-                @foreach (var product in Products) {
-                <tr>
-                    <td>
-                        <img src="/images/@product.Image?a=@product.GetHashCode()" width="200" />
-                    </td>
-                    <td>
-                        <strong>@product.Name</strong>
-                    </td>
-                    <td>
-                        @product.Description
-                    </td>
-                    <td>
-                        <strong>@product.Price.ToString("c")</strong>
-                    </td>
-                </tr>
-                } 
-            </tbody>
+        <tbody>
+            @*
+            <Virtualize ItemsProvider="LoadProducts" Context="product" OverscanCount="1" ItemSize="200">
+                <ItemContent>
+                    <tr>
+                        <td>
+                            <img src="/images/@product.Image?a=@product.GetHashCode()" width="300" />
+                        </td>
+                        <td>
+                            <strong>@product.Name</strong>
+                        </td>
+                        <td>
+                            @product.Description
+                        </td>
+                        <td>
+                            <strong>@product.Price.ToString("c")</strong>
+                        </td>
+                    </tr>
+                </ItemContent>
+                <Placeholder>
+                    <p>Loading...</p>
+                </Placeholder>
+            </Virtualize>
+            *@
+        </tbody>
     </table>
-}
+    
+
 </div>
 @code {
     private List<ProductModel>? Products { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var products = await httpClient.GetFromJsonAsync<List<ProductModel>>(
-                string.Format("/api/product?size={0}&page={1}",
-                12,
-                1
-            ));
+        Products = await httpClient.GetFromJsonAsync<List<ProductModel>>("/api/product");
+    }
+
+    private async ValueTask<ItemsProviderResult<ProductModel>> LoadProducts(ItemsProviderRequest request)
+    {
+        var page = Math.Ceiling(request.StartIndex / (decimal)request.Count) + 1;
+
+        var products = await httpClient.GetFromJsonAsync<List<ProductModel>>(string.Format("/api/product?size={0}&page={1}", request.Count, page));
+        var totalCount = await httpClient.GetFromJsonAsync<int>("/api/product/count");
 
         if (products != null)
         {
-            Products = new List<ProductModel>();
-            Products.AddRange(products);
-
-            products = await httpClient.GetFromJsonAsync<List<ProductModel>>(
-                    string.Format("/api/product?size={0}&page={1}",
-                    12,
-                    1
-                ));
-
-            if (products != null)
-            {
-                Products.AddRange(products);
-            }
+            return new ItemsProviderResult<ProductModel>(products, totalCount);
         }
+        return new ItemsProviderResult<ProductModel>(new List<ProductModel>(), totalCount);
     }
+
 }

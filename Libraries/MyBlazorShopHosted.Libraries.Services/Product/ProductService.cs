@@ -66,6 +66,15 @@ namespace MyBlazorShopHosted.Libraries.Services.Product
         }
 
         /// <summary>
+        /// Gets the count for the products
+        /// </summary>
+        /// <returns>The total number of products</returns>
+        public int GetCount()
+        {
+            return _storageService.Products.Count();
+        }
+
+        /// <summary>
         /// Gets the total page count for the products
         /// </summary>
         /// <param name="size">The number of items</param>

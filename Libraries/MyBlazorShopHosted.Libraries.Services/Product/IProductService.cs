@@ -36,6 +36,12 @@ namespace MyBlazorShopHosted.Libraries.Services.Product
         IList<ProductModel> GetAll(int size, int page = 1);
 
         /// <summary>
+        /// Gets the count for the products
+        /// </summary>
+        /// <returns>The total number of products</returns>
+        int GetCount();
+
+        /// <summary>
         /// Gets the total page count for the products
         /// </summary>
         /// <param name="size">The number of items</param>

@@ -2,9 +2,12 @@
     padding: 100px 30px;
     margin-left: auto;
     margin-right: auto;
-    max-width: 900px;
+    max-width: 1100px;
     font-size: 2rem;
 }
 td, th {
     padding: 5px;
+}
+td {
+    height: 200px;
 }
