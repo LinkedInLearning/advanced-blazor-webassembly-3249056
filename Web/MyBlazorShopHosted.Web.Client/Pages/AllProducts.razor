@@ -1,0 +1,66 @@
+﻿@page "/all-products"
+@using MyBlazorShopHosted.Libraries.Shared.Product.Models
+@using MyBlazorShopHosted.Web.Client.Shared.Layout
+@inject HttpClient httpClient
+<div class="all-products">
+@if (Products != null)
+{
+    <table class="all-products">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+            <tbody>
+                @foreach (var product in Products) {
+                <tr>
+                    <td>
+                        <img src="/images/@product.Image?a=@product.GetHashCode()" width="200" />
+                    </td>
+                    <td>
+                        <strong>@product.Name</strong>
+                    </td>
+                    <td>
+                        @product.Description
+                    </td>
+                    <td>
+                        <strong>@product.Price.ToString("c")</strong>
+                    </td>
+                </tr>
+                } 
+            </tbody>
+    </table>
+}
+</div>
+@code {
+    private List<ProductModel>? Products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var products = await httpClient.GetFromJsonAsync<List<ProductModel>>(
+                string.Format("/api/product?size={0}&page={1}",
+                12,
+                1
+            ));
+
+        if (products != null)
+        {
+            Products = new List<ProductModel>();
+            Products.AddRange(products);
+
+            products = await httpClient.GetFromJsonAsync<List<ProductModel>>(
+                    string.Format("/api/product?size={0}&page={1}",
+                    12,
+                    1
+                ));
+
+            if (products != null)
+            {
+                Products.AddRange(products);
+            }
+        }
+    }
+}
