@@ -66,6 +66,17 @@ namespace MyBlazorShopHosted.Libraries.Services.Product
         }
 
         /// <summary>
+        /// Gets all products, limiting to listing size
+        /// </summary>
+        /// <param name="size">The number of items</param>
+        /// <param name="startIndex">The start index</param>
+        /// <returns>A <see cref="IList<ProductModel>"/> type.</returns>
+        public IList<ProductModel> GetAllStartIndex(int size, int startIndex)
+        {
+            return _storageService.Products.Skip(startIndex).Take(size).ToList();
+        }
+
+        /// <summary>
         /// Gets the count for the products
         /// </summary>
         /// <returns>The total number of products</returns>

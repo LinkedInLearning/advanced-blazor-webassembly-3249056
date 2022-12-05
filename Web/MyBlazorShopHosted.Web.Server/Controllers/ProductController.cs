@@ -31,6 +31,13 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
             return _productService.GetAll(size.Value, page);
         }
 
+        [HttpGet("start-index")]
+        public IList<ProductModel> GetAllStartIndex(int size, int startIndex)
+        {
+            // Return partial products
+            return _productService.GetAllStartIndex(size, startIndex);
+        }
+
         [HttpGet("count")]
         public int GetCount()
         {
