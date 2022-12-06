@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.ResponseCompression;
 using MyBlazorShopHosted.Libraries.Services.Product;
 using MyBlazorShopHosted.Libraries.Services.ShoppingCart;
 using MyBlazorShopHosted.Libraries.Services.Storage;
@@ -12,6 +13,15 @@ builder.Services.AddRazorPages();
 builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddSingleton<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+
+/*
+builder.Services.AddSignalR();
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
+*/
 
 var app = builder.Build();
 
