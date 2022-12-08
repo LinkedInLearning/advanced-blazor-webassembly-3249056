@@ -40,7 +40,7 @@
             .WithUrl(navigationManager.ToAbsoluteUri("/live-chat"))
             .Build();
 
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        hubConnection.On<string>("ReceiveMessage", (message) =>
         {
             Messages.Add(new LiveChatMessage(message, LiveChatTypeEnum.RECEIVED));
             StateHasChanged();
