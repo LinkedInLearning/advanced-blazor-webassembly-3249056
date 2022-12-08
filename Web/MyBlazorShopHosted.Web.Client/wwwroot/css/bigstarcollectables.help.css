@@ -1,0 +1,49 @@
+#help {
+    margin: 0 auto;
+    padding-top: 56px;
+    width: var(--width-center-section);
+}
+
+#help h1 {
+    margin-bottom: 60px;
+    padding-bottom: 3rem;
+    font-weight: 400;
+    font-size: 2.6rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+#help p {
+    font-size: 2.4rem;
+}
+
+#help form {
+    padding: 15px 0;
+}
+
+#help button {
+    margin: 15px 0;
+}
+
+#help input {
+    font-size: 2.2rem;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    padding: 5px;
+}
+
+#help ul {
+    font-size: 2.5rem;
+    padding: 15px 0;
+}
+
+#help ul li {
+    padding: 15px;
+}
+
+#help ul li.sent {
+    background-color: var(--color-gold);
+}
+
+#help ul li.received {
+    background-color: var(--color-whitesmoke);
+}
