@@ -20,7 +20,7 @@
     }
     <form>
         <InputText @bind-Value="Message" />
-        <button class="button lg solid gold" type="button">Send message</button>
+        <button class="button lg solid gold" type="button" @onclick="SendMessageAsync">Send message</button>
     </form>
 </section>
 
@@ -49,6 +49,17 @@
         await hubConnection.StartAsync();
 
         await base.OnInitializedAsync();
+    }
+
+    private async Task SendMessageAsync()
+    {
+        if (hubConnection != null && hubConnection.State == HubConnectionState.Connected)
+        {
+            await hubConnection.SendAsync("SendMessageAsync", Message);
+            Messages.Add(new LiveChatMessage(Message, LiveChatTypeEnum.SENT));
+
+            Message = string.Empty;
+        }
     }
 
     public async ValueTask DisposeAsync()
