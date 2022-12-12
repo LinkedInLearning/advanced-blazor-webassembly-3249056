@@ -1,72 +1,13 @@
-﻿@using MyBlazorShopHosted.Libraries.Shared.Help.Models
-@using Microsoft.AspNetCore.SignalR.Client
-@page "/help"
+﻿@page "/help"
 @inject NavigationManager navigationManager
-@implements IAsyncDisposable
 <HeadContent>
     <link href="/css/bigstarcollectables.help.css" rel="stylesheet" />
 </HeadContent>
 <section id="help">
     <h1>Help</h1>
-    <p>If you have any questions, please add them to our live chat</p>
-    @if (Messages?.Any() ?? false)
-    {
-        <ul>
-            @foreach (var message in Messages)
-            {
-                <li class="@message.ClassName">@message.Message</li>
-            }
-        </ul>
-    }
+    <p>Please upload a screenshot of the problem you're having.</p>
     <form>
-        <InputText @bind-Value="Message" />
-        <button class="button lg solid gold" type="button" @onclick="SendMessageAsync">Send message</button>
+        <InputFile />
+        <button class="button lg solid gold" type="button">Upload image</button>
     </form>
 </section>
-
-@code {
-    private string? Message { get; set; }
-
-    private List<LiveChatMessage>? Messages { get; set; }
-
-    private HubConnection? hubConnection;
-}
-@functions {
-    protected override async Task OnInitializedAsync()
-    {
-        Messages = new List<LiveChatMessage>();
-
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(navigationManager.ToAbsoluteUri("/live-chat"))
-            .Build();
-
-        hubConnection.On<string>("ReceiveMessage", (message) =>
-        {
-            Messages.Add(new LiveChatMessage(message, LiveChatTypeEnum.RECEIVED));
-            StateHasChanged();
-        });
-
-        await hubConnection.StartAsync();
-
-        await base.OnInitializedAsync();
-    }
-
-    private async Task SendMessageAsync()
-    {
-        if (hubConnection != null && hubConnection.State == HubConnectionState.Connected)
-        {
-            await hubConnection.SendAsync("SendMessageAsync", Message);
-            Messages.Add(new LiveChatMessage(Message, LiveChatTypeEnum.SENT));
-
-            Message = string.Empty;
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (hubConnection != null)
-        {
-            await hubConnection.DisposeAsync();
-        }
-    }
-}
