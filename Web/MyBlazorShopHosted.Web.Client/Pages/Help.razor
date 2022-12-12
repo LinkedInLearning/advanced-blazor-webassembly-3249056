@@ -40,8 +40,6 @@
             content.Add(content: fileContent, name: "\"files\"", fileName: uploadFile.Name);
         }
 
-        var response = await httpClient.PostAsync("/api/file/upload", content);
-
         InputFileId = Guid.NewGuid();
     }
 }
