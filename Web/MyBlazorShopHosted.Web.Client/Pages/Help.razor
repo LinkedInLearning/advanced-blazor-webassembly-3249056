@@ -1,5 +1,6 @@
 ﻿@page "/help"
-@inject NavigationManager navigationManager
+@inject HttpClient httpClient
+@using System.Net.Http.Headers
 <HeadContent>
     <link href="/css/bigstarcollectables.help.css" rel="stylesheet" />
 </HeadContent>
@@ -7,7 +8,40 @@
     <h1>Help</h1>
     <p>Please upload a screenshot of the problem you're having.</p>
     <form>
-        <InputFile />
-        <button class="button lg solid gold" type="button">Upload image</button>
+        <InputFile @key=InputFileId.ToString() OnChange="OnInputFileChange" />
+        <button class="button lg solid gold" type="button" @onclick="UploadImageAsync">Upload image</button>
     </form>
 </section>
+@code {
+    private Guid InputFileId = Guid.NewGuid();
+    private IReadOnlyList<IBrowserFile>? UploadFiles { get; set; }
+}
+@functions {
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        UploadFiles = e.GetMultipleFiles();
+        this.StateHasChanged();
+    }
+
+    private async Task UploadImageAsync()
+    {
+        if (UploadFiles == null)
+        {
+            return;
+        }
+
+        using var content = new MultipartFormDataContent();
+
+        foreach (var uploadFile in UploadFiles)
+        {
+            var fileContent = new StreamContent(uploadFile.OpenReadStream());
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(uploadFile.ContentType);
+
+            content.Add(content: fileContent, name: "\"files\"", fileName: uploadFile.Name);
+        }
+
+        var response = await httpClient.PostAsync("/api/file/upload", content);
+
+        InputFileId = Guid.NewGuid();
+    }
+}

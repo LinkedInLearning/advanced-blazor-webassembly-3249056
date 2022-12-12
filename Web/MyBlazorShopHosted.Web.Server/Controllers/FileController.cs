@@ -24,13 +24,11 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         /// <summary>
         /// Uploads a file up to the server
         /// </summary>
-        /// <param name="file">The file</param>
-        /// <returns>A response about the upload</returns>
-        public async Task<ActionResult> UploadAsync(IFormFile file)
+        /// <param name="files">The files to upload</param>
+        /// <returns>A response about the upload</returns>        
+        [HttpPost("upload")]
+        public async Task<ActionResult> UploadAsync(List<IFormFile> files)
         {
-            // Get a random file name
-            var fileName = Path.GetRandomFileName();
-
             // Populate into uploads folder
             var folderPath = Path.Combine(_environment.ContentRootPath, "uploads");
 
@@ -40,14 +38,20 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 Directory.CreateDirectory(folderPath);
             }
 
-            // Get full file path
-            var path = Path.Combine(folderPath, fileName);
+            foreach (var file in files)
+            {
+                // Get full file path
+                var path = Path.Combine(folderPath, file.FileName);
 
-            // Upload file
-            await using FileStream fs = new(path, FileMode.Create);
-            await file.CopyToAsync(fs);
+                // Upload file (if path doesn't exist)
+                if (!System.IO.File.Exists(path))
+                {
+                    await using FileStream fs = new(path, FileMode.Create);
+                    await file.CopyToAsync(fs);
+                }
+            }
 
-            return Ok(new { Filename = fileName });
+            return Ok();
         }
     }
 }
