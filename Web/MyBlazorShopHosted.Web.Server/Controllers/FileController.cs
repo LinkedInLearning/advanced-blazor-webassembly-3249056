@@ -7,8 +7,15 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
     [ApiController]
     public class FileController : ControllerBase
     {
+        /// <summary>
+        /// An instance of <see cref="IWebHostEnvironment"/>
+        /// </summary>
         private readonly IWebHostEnvironment _environment;
 
+        /// <summary>
+        /// A new instance of <see cref="FileController"/>
+        /// </summary>
+        /// <param name="environment">An instance of <see cref="IWebHostEnvironment"/></param>
         public FileController(IWebHostEnvironment environment)
         {
             _environment = environment;
