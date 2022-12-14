@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections;
 
 namespace MyBlazorShopHosted.Web.Server.Controllers
 {
@@ -13,9 +14,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         private readonly IWebHostEnvironment _environment;
 
         private string[] AllowedUploadFileTypes = new string[] { "jpg" };
-
         private string[] AllowedUploadMimeTypes = new string[] { "image/jpeg" };
-
         private int AllowedUploadFileSizeLimitBytes = 307200; // 300 kb
 
         /// <summary>
@@ -46,6 +45,8 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
 
             foreach (var file in files)
             {
+                var errors = new List<string>();
+                
                 // Get full file path
                 var path = Path.Combine(folderPath, file.FileName);
 
