@@ -14,6 +14,8 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
 
         private string[] AllowedUploadFileTypes = new string[] { "jpg" };
 
+        private string[] AllowedUploadMimeTypes = new string[] { "image/jpeg" };
+
         private int AllowedUploadFileSizeLimitBytes = 307200; // 300 kb
 
         /// <summary>
