@@ -12,6 +12,10 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         /// </summary>
         private readonly IWebHostEnvironment _environment;
 
+        private string[] AllowedUploadFileTypes = new string[] { "jpg" };
+
+        private int AllowedUploadFileSizeLimitBytes = 307200; // 300 kb
+
         /// <summary>
         /// A new instance of <see cref="FileController"/>
         /// </summary>
