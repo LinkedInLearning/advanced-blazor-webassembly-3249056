@@ -89,7 +89,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 }
             }
 
-            return Ok();
+            return Ok(new { Success = true });
         }
     }
 }
