@@ -13,7 +13,17 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         /// </summary>
         private readonly IWebHostEnvironment _environment;
 
-        private string[] AllowedUploadFileTypes = new string[] { "jpg" };
+        private AllowedUploadFileType[] AllowedUploadFileTypes = new AllowedUploadFileType[] {
+                    new AllowedUploadFileType("jpg", new List<byte[]>
+                    {
+                        new byte[] { 0xff, 0xd8, 0xff, 0xdb },
+                        new byte[] { 0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01 },
+                        new byte[] { 0xff, 0xd8, 0xff, 0xee },
+                        new byte[] { 0xff, 0xd8, 0xff, 0xe1 },
+                        new byte[] { 0xff, 0xd8, 0xff, 0xe0 }
+                    })
+                    };
+
         private string[] AllowedUploadMimeTypes = new string[] { "image/jpeg" };
         private int AllowedUploadFileSizeLimitBytes = 307200; // 300 kb
 
