@@ -23,7 +23,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                     })
                     };
 
-        private int AllowedUploadFileSizeLimitBytes = 307200; // 300 kb
+        private int AllowedUploadFileSizeLimitBytes = 40960; // 40 kb
 
         /// <summary>
         /// A new instance of <see cref="FileController"/>
