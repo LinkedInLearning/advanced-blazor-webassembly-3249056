@@ -58,6 +58,29 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 // Get full file path
                 var path = Path.Combine(folderPath, file.FileName);
 
+                /*
+                var extension = Path.GetExtension(path);
+
+                var allowedUploadFileType = AllowedUploadFileTypes.ToList().FirstOrDefault(s => s.FileExtension == extension);
+
+                if (allowedUploadFileType == null)
+                {
+                    errors.Add("The uploaded file extension is not an accepted extension");
+                }
+                else
+                {
+                    using (var reader = new BinaryReader(file.OpenReadStream()))
+                    {
+                        var headerBytes = reader.ReadBytes(allowedUploadFileType.FileSignatures.Max(t => t.Length));
+
+                        if (!allowedUploadFileType.FileSignatures.Any(sig => headerBytes.Take(sig.Length).SequenceEqual(sig)))
+                        {
+                            errors.Add("The uploaded file is not valid");
+                        }
+                    }                
+                }
+                */
+
                 // Upload file (if path doesn't exist)
                 if (!System.IO.File.Exists(path))
                 {
