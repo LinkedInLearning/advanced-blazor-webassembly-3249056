@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Collections;
+using MyBlazorShopHosted.Libraries.Shared.Upload.Models;
 
 namespace MyBlazorShopHosted.Web.Server.Controllers
 {
@@ -14,7 +13,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         private readonly IWebHostEnvironment _environment;
 
         private AllowedUploadFileType[] AllowedUploadFileTypes = new AllowedUploadFileType[] {
-                    new AllowedUploadFileType("jpg", new List<byte[]>
+                    new AllowedUploadFileType(".jpg", new List<byte[]>
                     {
                         new byte[] { 0xff, 0xd8, 0xff, 0xdb },
                         new byte[] { 0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01 },
@@ -24,7 +23,6 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                     })
                     };
 
-        private string[] AllowedUploadMimeTypes = new string[] { "image/jpeg" };
         private int AllowedUploadFileSizeLimitBytes = 307200; // 300 kb
 
         /// <summary>
