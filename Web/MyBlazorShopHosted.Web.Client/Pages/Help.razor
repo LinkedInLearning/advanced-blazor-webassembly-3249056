@@ -1,6 +1,8 @@
 ﻿@page "/help"
 @inject HttpClient httpClient
 @using System.Net.Http.Headers
+@using MyBlazorShopHosted.Libraries.Shared.Upload.Extensions
+@using MyBlazorShopHosted.Libraries.Shared.Upload.Models
 <HeadContent>
     <link href="/css/bigstarcollectables.help.css" rel="stylesheet" />
 </HeadContent>
@@ -11,10 +13,22 @@
         <InputFile @key=InputFileId.ToString() OnChange="OnInputFileChange" />
         <button class="button lg solid gold" type="button" @onclick="UploadImageAsync">Upload image</button>
     </form>
+    @if (Errors?.Any() ?? false)
+    {
+        <p>The following errors occured:</p>
+        <ul>
+            @foreach (var error in Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    }
 </section>
 @code {
     private Guid InputFileId = Guid.NewGuid();
     private IReadOnlyList<IBrowserFile>? UploadFiles { get; set; }
+
+    private List<string>? Errors { get; set; }
 }
 @functions {
     private void OnInputFileChange(InputFileChangeEventArgs e)
@@ -30,6 +44,14 @@
             return;
         }
 
+        foreach (var uploadFile in UploadFiles)
+        {
+            var uploadFileBuffer = new byte[uploadFile.Size];
+            await uploadFile.OpenReadStream().ReadAsync(uploadFileBuffer);
+
+            var errors = AllowedUploadFileHelper.ValidateFile(uploadFile.Name, uploadFileBuffer, uploadFile.Size);
+        }
+
         using var content = new MultipartFormDataContent();
 
         foreach (var uploadFile in UploadFiles)
@@ -40,7 +62,7 @@
             content.Add(content: fileContent, name: "\"files\"", fileName: uploadFile.Name);
         }
 
-        await httpClient.PostAsync("/api/file/upload", content);
+        var response = await (await httpClient.PostAsync("/api/file/upload", content)).Content.ReadFromJsonAsync<AllowedUploadFileResult>();
 
         InputFileId = Guid.NewGuid();
     }

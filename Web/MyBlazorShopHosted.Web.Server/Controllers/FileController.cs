@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyBlazorShopHosted.Libraries.Shared.Upload.Extensions;
 using MyBlazorShopHosted.Libraries.Shared.Upload.Models;
 
 namespace MyBlazorShopHosted.Web.Server.Controllers
@@ -11,19 +12,6 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         /// An instance of <see cref="IWebHostEnvironment"/>
         /// </summary>
         private readonly IWebHostEnvironment _environment;
-
-        private AllowedUploadFileType[] AllowedUploadFileTypes = new AllowedUploadFileType[] {
-                    new AllowedUploadFileType(".jpg", new List<byte[]>
-                    {
-                        new byte[] { 0xff, 0xd8, 0xff, 0xdb },
-                        new byte[] { 0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01 },
-                        new byte[] { 0xff, 0xd8, 0xff, 0xee },
-                        new byte[] { 0xff, 0xd8, 0xff, 0xe1 },
-                        new byte[] { 0xff, 0xd8, 0xff, 0xe0 }
-                    })
-                    };
-
-        private int AllowedUploadFileSizeLimitBytes = 40960; // 40 kb
 
         /// <summary>
         /// A new instance of <see cref="FileController"/>
@@ -40,7 +28,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         /// <param name="files">The files to upload</param>
         /// <returns>A response about the upload</returns>        
         [HttpPost("upload")]
-        public async Task<ActionResult> UploadAsync(List<IFormFile> files)
+        public async Task<AllowedUploadFileResult> UploadAsync(List<IFormFile> files)
         {
             // Populate into uploads folder
             var folderPath = Path.Combine(_environment.ContentRootPath, "uploads");
@@ -52,41 +40,20 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
             }
 
             foreach (var file in files)
-            {
-                var errors = new List<string>();
-                
+            {                
                 // Get full file path
                 var path = Path.Combine(folderPath, file.FileName);
-                
-                var extension = Path.GetExtension(path);
 
-                var allowedUploadFileType = AllowedUploadFileTypes.ToList().FirstOrDefault(s => s.FileExtension == extension);
-
-                if (allowedUploadFileType == null)
+                // Get errors
+                List<string>? errors = null;
+                using (var binaryReader = new BinaryReader(file.OpenReadStream()))
                 {
-                    errors.Add("The uploaded file extension is not an accepted extension");
-                }
-                else
-                {
-                    using (var reader = new BinaryReader(file.OpenReadStream()))
-                    {
-                        var headerBytes = reader.ReadBytes(allowedUploadFileType.FileSignatures.Max(t => t.Length));
-
-                        if (!allowedUploadFileType.FileSignatures.Any(sig => headerBytes.Take(sig.Length).SequenceEqual(sig)))
-                        {
-                            errors.Add("The uploaded file is not valid");
-                        }
-                    }                
-                }
-
-                if (file.Length > AllowedUploadFileSizeLimitBytes)
-                {
-                    errors.Add("The uploaded file exceeds the maximum size limit");
+                    errors = AllowedUploadFileHelper.ValidateFile(file.FileName, binaryReader.ReadBytes((int)file.Length), file.Length);
                 }
 
                 if (errors.Any())
                 {
-                    return Ok(new { Errors = errors, Success = false });
+                    return new AllowedUploadFileResult(false, errors);
                 }
 
                 // Upload file (if path doesn't exist)
@@ -97,7 +64,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 }
             }
 
-            return Ok(new { Success = true });
+            return new AllowedUploadFileResult(true);
         }
     }
 }
