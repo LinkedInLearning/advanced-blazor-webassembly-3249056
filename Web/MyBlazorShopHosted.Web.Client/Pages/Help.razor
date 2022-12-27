@@ -23,12 +23,17 @@
             }
         </ul>
     }
+    @if (Success)
+    {
+        <p>The file has been successfully uploaded.</p>
+    }
 </section>
 @code {
     private Guid InputFileId = Guid.NewGuid();
     private IReadOnlyList<IBrowserFile>? UploadFiles { get; set; }
 
     private List<string>? Errors { get; set; }
+    private bool Success { get; set; }
 }
 @functions {
     private void OnInputFileChange(InputFileChangeEventArgs e)
@@ -39,6 +44,8 @@
 
     private async Task UploadImageAsync()
     {
+        Success = false;
+
         if (UploadFiles == null)
         {
             return;
