@@ -2,10 +2,12 @@
 @using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
 @using MyBlazorShopHosted.Web.Client.Shared.Layout
 @using System.Text.Json
+@using Blazored.LocalStorage
 @page "/product/{slug}"
 @inject NavigationManager navigationManager
 @inject HttpClient httpClient
 @inject IConfiguration configuration
+@inject ILocalStorageService localStorageService
 @if (Product != null)
 {
     <PageTitle>@Product.Name</PageTitle>
@@ -51,12 +53,12 @@
             </div>
         </EditForm>
     </section>
-    @if (AllProducts?.Any() ?? false)
+    @if (RecentlyViewedProducts?.Any() ?? false)
     {
         <aside id="also">
-            <h1>Other products:</h1>
+            <h1>Recently viewed products:</h1>
             <dl class="prod-list">
-                @foreach (var product in AllProducts)
+                @foreach (var product in RecentlyViewedProducts)
                 {
                     <ProductListingItem Product="product"></ProductListingItem>
                 }
@@ -65,6 +67,8 @@
     }
 }
 @code {
+    const string RECENTLY_VIEWED_PRODUCTS_KEY = "recentlyViewedProducts";
+
     private ProductModel? Product { get; set; }
 
     private bool HasProductInCart { get; set; }
@@ -72,7 +76,7 @@
     [Parameter]
     public string? Slug { get; set; }
 
-    private IList<ProductModel>? AllProducts { get; set; }
+    private List<ProductModel>? RecentlyViewedProducts { get; set; }
 
     private ProductAddToCartModel ProductAddToCartModel = new ProductAddToCartModel();
 
@@ -81,12 +85,14 @@
 }
 @functions {
     protected override async Task OnInitializedAsync()
-    {
-        // Get product listing.
-        AllProducts = await httpClient.GetFromJsonAsync<IList<ProductModel>>(
-            "/api/product"
-        );
+    {        
+        if (!await localStorageService.ContainKeyAsync(RECENTLY_VIEWED_PRODUCTS_KEY))
+        {
+            await localStorageService.SetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY, new List<ProductModel>());
+        }
+        RecentlyViewedProducts = await localStorageService.GetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY);
 
+        // Get product listing.
         await base.OnInitializedAsync();
     }
 
@@ -102,6 +108,11 @@
                 HasProductInCart = await httpClient.GetFromJsonAsync<bool>(
                         string.Format("/api/shopping-cart/has-product/{0}", Product.Sku)
                 );
+
+                if (RecentlyViewedProducts != null && !RecentlyViewedProducts.Any(rp => rp.Sku == Product.Sku))
+                {
+                }
+
             }
 
             ProductAddToCartModel = new ProductAddToCartModel();
