@@ -22,6 +22,11 @@
 @functions {
     protected override async Task OnInitializedAsync()
     {
+        if (await localStorageService.ContainKeyAsync(MESSAGE_KEY))
+        {
+            Message = await localStorageService.GetItemAsStringAsync(MESSAGE_KEY);
+        }
+
         await base.OnInitializedAsync();
     }
 
@@ -31,6 +36,7 @@
 
         if (changeEventArgs?.Value != null)
         {
+            await localStorageService.SetItemAsStringAsync(MESSAGE_KEY, changeEventArgs.Value.ToString());
         }
     }
 }
