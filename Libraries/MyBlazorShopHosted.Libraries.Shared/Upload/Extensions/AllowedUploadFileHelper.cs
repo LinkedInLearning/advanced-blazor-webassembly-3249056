@@ -28,9 +28,8 @@ namespace MyBlazorShopHosted.Libraries.Shared.Upload.Extensions
         /// </summary>
         /// <param name="filename">The name of the file</param>
         /// <param name="fileBytes">The bytes that make up the file</param>
-        /// <param name="fileLength">The length of the file</param>
         /// <returns>An upload file result, which it passed validation and any errors that it returned.</returns>
-        public static AllowedUploadFileResult ValidateFile(string filename, byte[] fileBytes, long fileLength)
+        public static AllowedUploadFileResult ValidateFile(string filename, byte[] fileBytes)
         {
             var errors = new List<string>();
 
@@ -60,7 +59,7 @@ namespace MyBlazorShopHosted.Libraries.Shared.Upload.Extensions
                 }
             }
 
-            if (fileLength > AllowedUploadFileSizeLimitBytes)
+            if (fileBytes.Length > AllowedUploadFileSizeLimitBytes)
             {
                 // File upload exceeds the maximum size, so throw error.
                 errors.Add("The uploaded file exceeds the maximum size limit");

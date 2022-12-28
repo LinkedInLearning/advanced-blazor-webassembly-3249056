@@ -60,9 +60,8 @@
             await uploadFile.OpenReadStream().ReadAsync(uploadFileBuffer);
 
             // Check the uploaded file to see if they validate.
-            AllowedUploadFileResult = AllowedUploadFileHelper.ValidateFile(uploadFile.Name, uploadFileBuffer, uploadFile.Size);
+            AllowedUploadFileResult = AllowedUploadFileHelper.ValidateFile(uploadFile.Name, uploadFileBuffer);
         }
-
 
         using var content = new MultipartFormDataContent();
 

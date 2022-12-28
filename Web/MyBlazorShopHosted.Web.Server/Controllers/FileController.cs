@@ -49,7 +49,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 // Get errors
                 using (var binaryReader = new BinaryReader(file.OpenReadStream()))
                 {
-                    allowedUploadFileResult = AllowedUploadFileHelper.ValidateFile(file.FileName, binaryReader.ReadBytes((int)file.Length), file.Length);
+                    allowedUploadFileResult = AllowedUploadFileHelper.ValidateFile(file.FileName, binaryReader.ReadBytes((int)file.Length));
                 }
 
                 if (allowedUploadFileResult?.Success ?? false)
