@@ -13,17 +13,17 @@
         <InputFile @key=InputFileId.ToString() OnChange="OnInputFileChange" />
         <button class="button lg solid gold" type="button" @onclick="UploadImageAsync">Upload image</button>
     </form>
-    @if (Errors?.Any() ?? false)
+    @if (AllowedUploadFileResult?.Errors?.Any() ?? false)
     {
         <p>The following errors occured:</p>
         <ul>
-            @foreach (var error in Errors)
+            @foreach (var error in AllowedUploadFileResult.Errors)
             {
                 <li>@error</li>
             }
         </ul>
     }
-    @if (Success)
+    @if (Uploaded)
     {
         <p>The file has been successfully uploaded.</p>
     }
@@ -32,8 +32,8 @@
     private Guid InputFileId = Guid.NewGuid();
     private IReadOnlyList<IBrowserFile>? UploadFiles { get; set; }
 
-    private List<string>? Errors { get; set; }
-    private bool Success { get; set; }
+    private AllowedUploadFileResult? AllowedUploadFileResult { get; set; }
+    private bool Uploaded { get; set; }
 }
 @functions {
     private void OnInputFileChange(InputFileChangeEventArgs e)
@@ -44,7 +44,9 @@
 
     private async Task UploadImageAsync()
     {
-        Success = false;
+        // Reset messages
+        AllowedUploadFileResult = null;
+        Uploaded = false;
 
         if (UploadFiles == null)
         {
@@ -53,14 +55,18 @@
 
         foreach (var uploadFile in UploadFiles)
         {
+            // Read uploaded file and store as a byte array
             var uploadFileBuffer = new byte[uploadFile.Size];
             await uploadFile.OpenReadStream().ReadAsync(uploadFileBuffer);
 
-            var errors = AllowedUploadFileHelper.ValidateFile(uploadFile.Name, uploadFileBuffer, uploadFile.Size);
+            // Check the uploaded file to see if they validate.
+            AllowedUploadFileResult = AllowedUploadFileHelper.ValidateFile(uploadFile.Name, uploadFileBuffer, uploadFile.Size);
         }
+
 
         using var content = new MultipartFormDataContent();
 
+        // Add each file to the upload.
         foreach (var uploadFile in UploadFiles)
         {
             var fileContent = new StreamContent(uploadFile.OpenReadStream());
@@ -69,8 +75,16 @@
             content.Add(content: fileContent, name: "\"files\"", fileName: uploadFile.Name);
         }
 
-        var response = await (await httpClient.PostAsync("/api/file/upload", content)).Content.ReadFromJsonAsync<AllowedUploadFileResult>();
+        // Post the file up to the API and return a result.
+        AllowedUploadFileResult = await (await httpClient.PostAsync("/api/file/upload", content)).Content.ReadFromJsonAsync<AllowedUploadFileResult>();
 
-        InputFileId = Guid.NewGuid();
+        if (AllowedUploadFileResult?.Success ?? false)
+        {
+            // If successfully uploaded, note that it has been uploaded.
+            Uploaded = true;
+            InputFileId = Guid.NewGuid();
+        }
+        
+
     }
 }

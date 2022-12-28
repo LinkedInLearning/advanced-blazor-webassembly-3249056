@@ -28,7 +28,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
         /// <param name="files">The files to upload</param>
         /// <returns>A response about the upload</returns>        
         [HttpPost("upload")]
-        public async Task<AllowedUploadFileResult> UploadAsync(List<IFormFile> files)
+        public async Task<AllowedUploadFileResult?> UploadAsync(List<IFormFile> files)
         {
             // Populate into uploads folder
             var folderPath = Path.Combine(_environment.ContentRootPath, "uploads");
@@ -39,32 +39,31 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 Directory.CreateDirectory(folderPath);
             }
 
+            AllowedUploadFileResult? allowedUploadFileResult = null;
+
             foreach (var file in files)
-            {                
+            {
                 // Get full file path
                 var path = Path.Combine(folderPath, file.FileName);
 
                 // Get errors
-                List<string>? errors = null;
                 using (var binaryReader = new BinaryReader(file.OpenReadStream()))
                 {
-                    errors = AllowedUploadFileHelper.ValidateFile(file.FileName, binaryReader.ReadBytes((int)file.Length), file.Length);
+                    allowedUploadFileResult = AllowedUploadFileHelper.ValidateFile(file.FileName, binaryReader.ReadBytes((int)file.Length), file.Length);
                 }
 
-                if (errors.Any())
+                if (allowedUploadFileResult?.Success ?? false)
                 {
-                    return new AllowedUploadFileResult(false, errors);
-                }
-
-                // Upload file (if path doesn't exist)
-                if (!System.IO.File.Exists(path))
-                {
-                    await using FileStream fs = new(path, FileMode.Create);
-                    await file.CopyToAsync(fs);
+                    // Upload file (if path doesn't exist)
+                    if (!System.IO.File.Exists(path))
+                    {
+                        await using FileStream fs = new(path, FileMode.Create);
+                        await file.CopyToAsync(fs);
+                    }
                 }
             }
 
-            return new AllowedUploadFileResult(true);
+            return allowedUploadFileResult;
         }
     }
 }
