@@ -2,12 +2,12 @@
 @using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
 @using MyBlazorShopHosted.Web.Client.Shared.Layout
 @using System.Text.Json
-@using Blazored.LocalStorage
+@using Blazored.SessionStorage
 @page "/product/{slug}"
 @inject NavigationManager navigationManager
 @inject HttpClient httpClient
 @inject IConfiguration configuration
-@inject ILocalStorageService localStorageService
+@inject ISessionStorageService sessionStorageService
 @if (Product != null)
 {
     <PageTitle>@Product.Name</PageTitle>
@@ -86,11 +86,11 @@
 @functions {
     protected override async Task OnInitializedAsync()
     {        
-        if (!await localStorageService.ContainKeyAsync(RECENTLY_VIEWED_PRODUCTS_KEY))
+        if (!await sessionStorageService.ContainKeyAsync(RECENTLY_VIEWED_PRODUCTS_KEY))
         {
-            await localStorageService.SetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY, new List<ProductModel>());
+            await sessionStorageService.SetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY, new List<ProductModel>());
         }
-        RecentlyViewedProducts = await localStorageService.GetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY);
+        RecentlyViewedProducts = await sessionStorageService.GetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY);
 
         // Get product listing.
         await base.OnInitializedAsync();
