@@ -1,20 +1,18 @@
 ﻿@using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
+@using MyBlazorShopHosted.Web.Client.StateManagement
 @inherits LayoutComponentBase
 @inject HttpClient httpClient
-<CascadingValue Value="@ShoppingCartCountModel" Name="ShoppingCartCountModel">
-    <Header />
-    <main id="main">
-        @Body
-    </main>
-    <Footer />
-</CascadingValue>
+@inject IShoppingCartStateContainer shoppingCartStateContainer
+<Header />
+<main id="main">
+    @Body
+</main>
+<Footer />
 @code {
-    private ShoppingCartCountModel? ShoppingCartCountModel;
 
     protected override async Task OnInitializedAsync()
     {
-        ShoppingCartCountModel = new ShoppingCartCountModel();
-        await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
+        await shoppingCartStateContainer.UpdateTotalItemsCountAsync(httpClient);
 
         await base.OnInitializedAsync();
     }

@@ -3,6 +3,7 @@ using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MyBlazorShopHosted.Web.Client;
+using MyBlazorShopHosted.Web.Client.StateManagement;
 using System.Globalization;
 using System.Net.Http.Headers;
 
@@ -40,5 +41,6 @@ CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddSingleton<IShoppingCartStateContainer, ShoppingCartStateContainer>();
 
 await builder.Build().RunAsync();

@@ -3,11 +3,13 @@
 @using MyBlazorShopHosted.Web.Client.Shared.Layout
 @using System.Text.Json
 @using Blazored.SessionStorage
+@using MyBlazorShopHosted.Web.Client.StateManagement
 @page "/product/{slug}"
 @inject NavigationManager navigationManager
 @inject HttpClient httpClient
 @inject IConfiguration configuration
 @inject ISessionStorageService sessionStorageService
+@inject IShoppingCartStateContainer shoppingCartStateContainer
 @if (Product != null)
 {
     <PageTitle>@Product.Name</PageTitle>
@@ -79,9 +81,6 @@
     private List<ProductModel>? RecentlyViewedProducts { get; set; }
 
     private ProductAddToCartModel ProductAddToCartModel = new ProductAddToCartModel();
-
-    [CascadingParameter(Name="ShoppingCartCountModel")]
-    private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
 }
 @functions {
     protected override async Task OnInitializedAsync()
@@ -155,10 +154,8 @@
 
             ProductAddToCartModel.Quantity = 1;
 
-            if (ShoppingCartCountModel != null) {
-                // Signal that the cart has been updated.
-                await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
-            }
+            // Signal that the cart has been updated.
+            await shoppingCartStateContainer.UpdateTotalItemsCountAsync(httpClient);
 
             navigationManager.NavigateTo("/cart");
 

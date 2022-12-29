@@ -2,15 +2,18 @@
 @using MyBlazorShopHosted.Web.Client.Components
 @using System.Globalization
 @using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
+@using MyBlazorShopHosted.Web.Client.StateManagement
 @page "/cart"
 @inject HttpClient httpClient
+@inject IShoppingCartStateContainer shoppingCartStateContainer
+
 <PageTitle>Shopping cart page</PageTitle>
 <HeadContent>
     <meta name="description" content="Shopping cart page" />
     <link href="/css/bigstarcollectables.cart.css" rel="stylesheet" />
 </HeadContent>
 <section id="cart">
-    <h1>Shopping Cart@(ShoppingCartCountModel != null ? string.Format(" ({0} item{1})", ShoppingCartCountModel.Count, ShoppingCartCountModel.Count != 1 ? "s" : "") : "")</h1>
+    <h1>Shopping Cart@(string.Format(" ({0} item{1})", shoppingCartStateContainer.TotalItemsCount, shoppingCartStateContainer.TotalItemsCount != 1 ? "s" : ""))</h1>
     <form>
     <TableTemplate HeaderNames="@TableHeaderNames">
         <RowTemplate>
@@ -36,27 +39,21 @@
 
     private ShoppingCartModel? ShoppingCartItems { get; set; }
 
-    [CascadingParameter(Name = "ShoppingCartCountModel")]
-    private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         ShoppingCartItems = await httpClient.GetFromJsonAsync<ShoppingCartModel?>(
            "/api/shopping-cart"
         );
-        if (ShoppingCartCountModel != null)
+        shoppingCartStateContainer.OnTotalItemsCountChange += async () =>
         {
-            ShoppingCartCountModel.UpdateCart += async () =>
-            {
-                // Update shopping cart when the count has changed.
-                ShoppingCartItems = await httpClient.GetFromJsonAsync<ShoppingCartModel?>(
-                    "/api/shopping-cart"
-                );
+            // Update shopping cart when the count has changed.
+            ShoppingCartItems = await httpClient.GetFromJsonAsync<ShoppingCartModel?>(
+                "/api/shopping-cart"
+            );
 
-                // Refresh state
-                StateHasChanged();
-            };
-        }
+            // Refresh state
+            StateHasChanged();
+        };
 
         await base.OnInitializedAsync();
     }

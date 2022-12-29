@@ -28,9 +28,6 @@
     private bool HasProductInCart { get; set; }
 
     private int? Quantity { get; set; }
-
-    [CascadingParameter(Name="ShoppingCartCountModel")]
-    private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
 }
 @functions {
     protected override async Task OnParametersSetAsync()

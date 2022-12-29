@@ -1,29 +1,24 @@
 ﻿@using MyBlazorShopHosted.Libraries.Shared.ShoppingCart.Models
+@using MyBlazorShopHosted.Web.Client.StateManagement
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
 @inject IJSRuntime jsRuntime
+@inject IShoppingCartStateContainer shoppingCartStateContainer
 <header id="banner">
 	<a href="./"><img src="/images/logomark-big-star-white.svg" width="43" height="50" alt="Big Star Collectibles"></a>
     <NavMenu />
     <button type="button" @onclick="RedirectToCart">
 		<img src="/images/icon-shopping-cart-v01-white.svg" width="36" height="33" alt="Cart Panel">
-        <span class="visually-hidden">(</span><span class="num">@(ShoppingCartCountModel != null ? ShoppingCartCountModel.Count.ToString() : "0")</span> <span class="visually-hidden">items)</span>
+        <span class="visually-hidden">(</span><span class="num">@(shoppingCartStateContainer.TotalItemsCount)</span> <span class="visually-hidden">items)</span>
 	</button>
 </header>
 @code {
-    [CascadingParameter(Name="ShoppingCartCountModel")]
-    private ShoppingCartCountModel? ShoppingCartCountModel { get; set; }
-
     protected override async Task OnInitializedAsync()
-    {        
-        if (ShoppingCartCountModel != null)
+    {
+        shoppingCartStateContainer.OnTotalItemsCountChange += () =>
         {
-            ShoppingCartCountModel.UpdateCart += () =>
-            {
-                // Refresh the component as the cart has been updated
-                StateHasChanged();
-            };
-        }
+            StateHasChanged();
+        };
         await base.OnInitializedAsync();
     }
 
