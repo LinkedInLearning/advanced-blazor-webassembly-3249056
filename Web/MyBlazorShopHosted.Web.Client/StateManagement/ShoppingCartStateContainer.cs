@@ -7,6 +7,13 @@ namespace MyBlazorShopHosted.Web.Client.StateManagement
     /// </summary>
     public class ShoppingCartStateContainer : IShoppingCartStateContainer
     {
+        private readonly HttpClient _httpClient;
+
+        public ShoppingCartStateContainer(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
         /// <summary>
         /// Gets the count of the total items.
         /// </summary>
@@ -22,9 +29,9 @@ namespace MyBlazorShopHosted.Web.Client.StateManagement
         /// </summary>
         /// <param name="httpClient">An instance of <see cref="HttpClient"/></param>
         /// <returns>An instance of <see cref="Task"/></returns>
-        public async Task UpdateTotalItemsCountAsync(HttpClient httpClient)
+        public async Task UpdateTotalItemsCountAsync()
         {
-            TotalItemsCount = await httpClient.GetFromJsonAsync<int>(
+            TotalItemsCount = await _httpClient.GetFromJsonAsync<int>(
                 "/api/shopping-cart/count"
             );
 

@@ -12,7 +12,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await shoppingCartStateContainer.UpdateTotalItemsCountAsync(httpClient);
+        await shoppingCartStateContainer.UpdateTotalItemsCountAsync();
 
         await base.OnInitializedAsync();
     }

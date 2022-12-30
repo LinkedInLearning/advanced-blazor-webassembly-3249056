@@ -20,8 +20,7 @@ namespace MyBlazorShopHosted.Web.Client.StateManagement
         /// <summary>
         /// Updates the total items count and invokes the onchange event
         /// </summary>
-        /// <param name="httpClient">An instance of <see cref="HttpClient"/></param>
         /// <returns>An instance of <see cref="Task"/></returns>
-        Task UpdateTotalItemsCountAsync(HttpClient httpClient);
+        Task UpdateTotalItemsCountAsync();
     }
 }

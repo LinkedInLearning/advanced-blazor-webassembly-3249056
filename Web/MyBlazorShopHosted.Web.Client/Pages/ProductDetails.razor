@@ -145,7 +145,7 @@
             ProductAddToCartModel.Quantity = 1;
 
             // Signal that the cart has been updated.
-            await shoppingCartStateContainer.UpdateTotalItemsCountAsync(httpClient);
+            await shoppingCartStateContainer.UpdateTotalItemsCountAsync();
 
             navigationManager.NavigateTo("/cart");
 
