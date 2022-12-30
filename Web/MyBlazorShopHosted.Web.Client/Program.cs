@@ -16,7 +16,7 @@ http.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
 {
     NoCache = true
 };
-builder.Services.AddScoped(sp => http);
+builder.Services.AddSingleton(sp => http);
 builder.Services.AddSingleton<IShoppingCartStateContainer, ShoppingCartStateContainer>();
 
 await builder.Build().RunAsync();
