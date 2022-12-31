@@ -8,15 +8,17 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var http = new HttpClient()
-{
-    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-};
-http.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
-{
-    NoCache = true
-};
-builder.Services.AddTransient(sp => http);
+builder.Services.AddSingleton(serviceProvider => {
+    var http = new HttpClient()
+    {
+        BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+    };
+    http.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+    {
+        NoCache = true
+    };
+    return http;
+});
 builder.Services.AddSingleton<IShoppingCartStateContainer, ShoppingCartStateContainer>();
 
 await builder.Build().RunAsync();

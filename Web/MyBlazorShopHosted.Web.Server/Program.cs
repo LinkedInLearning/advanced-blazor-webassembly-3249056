@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Hosting.Server;
 using MyBlazorShopHosted.Libraries.Services.Product;
 using MyBlazorShopHosted.Libraries.Services.ShoppingCart;
 using MyBlazorShopHosted.Libraries.Services.Storage;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,23 @@ builder.Services.AddRazorPages();
 builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddSingleton<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+
+/*
+builder.Services.AddSingleton(serviceProvider => {
+    var addressFeature = serviceProvider.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>();
+    var baseAddress = addressFeature?.Addresses.First();
+
+    var http = new HttpClient()
+    {
+        BaseAddress = new Uri(baseAddress)
+    };
+    http.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+    {
+        NoCache = true
+    };
+    return http;
+});
+*/
 
 var app = builder.Build();
 
