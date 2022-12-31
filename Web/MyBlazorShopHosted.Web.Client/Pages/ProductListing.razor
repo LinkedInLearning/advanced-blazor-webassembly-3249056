@@ -5,6 +5,7 @@
 @inject IConfiguration configuration
 @inject HttpClient httpClient
 @inject ILogger<ProductListing> logger
+@inject PersistentComponentState componentState
 <PageTitle>Product listings</PageTitle>
 <HeadContent>
     <meta name="description" content="Product listing page" />
@@ -67,22 +68,57 @@
     private int TotalPageCount { get; set; }
 }
 @functions {
+    protected override Task OnInitializedAsync()
+    {
+        componentState.RegisterOnPersisting(() => StoreProducts());
+        componentState.RegisterOnPersisting(() => StoreTotalPageCount());
+
+        return base.OnInitializedAsync();
+    }
+
     protected override async Task OnParametersSetAsync()
     {
         var pageSize = 8;
 
-        Products = await httpClient.GetFromJsonAsync<IList<ProductModel>?>(
-            string.Format("/api/product?size={0}&page={1}",
-            pageSize,
-            Page ?? 1
-            )
-        );
-        TotalPageCount = await httpClient.GetFromJsonAsync<int>(
-            string.Format("/api/product/total-page-count?size={0}",
-            pageSize
-            )
-        );
+        if (componentState.TryTakeFromJson<IList<ProductModel>?>("products", out var products))
+        {
+            Products = products;
+        }
+        else
+        {
+            Products = await httpClient.GetFromJsonAsync<IList<ProductModel>?>(
+                string.Format("/api/product?size={0}&page={1}",
+                pageSize,
+                Page ?? 1
+                )
+            );
+        }
+
+        if (componentState.TryTakeFromJson<int>("totalPageCount", out var totalPageCount))
+        {
+            TotalPageCount = totalPageCount;
+        }
+        else
+        {
+            TotalPageCount = await httpClient.GetFromJsonAsync<int>(
+                string.Format("/api/product/total-page-count?size={0}",
+                pageSize
+                )
+            );
+        }
 
         await base.OnParametersSetAsync();
+    }
+
+    private Task StoreProducts()
+    {
+        componentState.PersistAsJson<IList<ProductModel>?>("products", Products);
+        return Task.CompletedTask;
+    }
+
+    private Task StoreTotalPageCount()
+    {
+        componentState.PersistAsJson<int>("totalPageCount", TotalPageCount);
+        return Task.CompletedTask;
     }
 }
