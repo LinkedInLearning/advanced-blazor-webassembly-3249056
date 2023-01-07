@@ -1,6 +1,6 @@
 namespace MyBlazorShopHosted.Testing.E2E.Client
 {
-    public class ProductToCartTests
+    public class ProductToCartTests : BaseTest
     {
         public ProductToCartTests()
         {
@@ -8,9 +8,9 @@ namespace MyBlazorShopHosted.Testing.E2E.Client
         }
 
         [Fact]
-        public void Page_AddsProductToCart_ShowsCartPage()
+        public async void Page_AddsProductToCart_ShowsCartPage()
         {
-
+           var page = await CreateBrowserAsync();
         }
     }
 }
