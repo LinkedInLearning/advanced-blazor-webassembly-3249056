@@ -8,13 +8,19 @@ namespace MyBlazorShopHosted.Testing.E2E.Client
         protected async Task<IPage> CreateBrowserAsync()
         {
             var playwright = await Playwright.CreateAsync();
-            
+          
             var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                Headless = false
+                Args = new string[] { "--start-maximized" },
+                Headless = false, 
             });
 
-            return await browser.NewPageAsync();     
+            var context = await browser.NewContextAsync(new BrowserNewContextOptions()
+            {
+                ViewportSize = ViewportSize.NoViewport
+            });
+          
+            return await context.NewPageAsync();     
         }
     }
 }
