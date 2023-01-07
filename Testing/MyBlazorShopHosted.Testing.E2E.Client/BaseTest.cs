@@ -9,7 +9,7 @@ namespace MyBlazorShopHosted.Testing.E2E.Client
         {
             var playwright = await Playwright.CreateAsync();
             
-            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
                 Headless = false
             });
