@@ -10,8 +10,7 @@
     <h1>Help</h1>
     <p>Please upload a screenshot of the problem you're having.</p>
     <form>
-        <InputFile @key=InputFileId.ToString() OnChange="OnInputFileChange" />
-        <button class="button lg solid gold" type="button" @onclick="UploadImageAsync">Upload image</button>
+        <button class="button lg solid gold" type="button">Upload image</button>
     </form>
     @if (AllowedUploadFileResult?.Errors?.Any() ?? false)
     {
@@ -22,10 +21,6 @@
                 <li>@error</li>
             }
         </ul>
-    }
-    @if (Uploaded)
-    {
-        <p>The file has been successfully uploaded.</p>
     }
 </section>
 @code {
