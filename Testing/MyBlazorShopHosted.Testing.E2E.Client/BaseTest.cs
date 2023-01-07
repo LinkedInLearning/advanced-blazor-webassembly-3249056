@@ -9,12 +9,12 @@ namespace MyBlazorShopHosted.Testing.E2E.Client
         {
             var playwright = await Playwright.CreateAsync();
             
-            await using var browser = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
                 Headless = false
             });
 
-            return await browser.NewPageAsync();            
+            return await browser.NewPageAsync();     
         }
     }
 }
