@@ -5,7 +5,7 @@ using MyBlazorShopHosted.Libraries.Services.ShoppingCart;
 using MyBlazorShopHosted.Libraries.Services.Storage;
 using System.Net.Http.Headers;
 using MyBlazorShopHosted.Web.Client.StateManagement;
-using Microsoft.Net.Http.Headers;
+using HeaderNames = Microsoft.Net.Http.Headers.HeaderNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
