@@ -1,3 +1,4 @@
+using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.ResponseCompression;
 using MyBlazorShopHosted.Libraries.Services.Product;
 using MyBlazorShopHosted.Libraries.Services.ShoppingCart;
@@ -30,6 +31,13 @@ app.UseResponseCompression();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+
+    // No cache
+    app.Use(async (httpContext, next) =>
+    {
+        httpContext.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+        await next();
+    });
 }
 else
 {
