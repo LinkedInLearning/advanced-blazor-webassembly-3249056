@@ -5,6 +5,7 @@ using MyBlazorShopHosted.Libraries.Services.ShoppingCart;
 using MyBlazorShopHosted.Libraries.Services.Storage;
 using System.Net.Http.Headers;
 using MyBlazorShopHosted.Web.Client.StateManagement;
+using HeaderNames = Microsoft.Net.Http.Headers.HeaderNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+
+    // No cache
+    app.Use(async (httpContext, next) =>
+    {
+        httpContext.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+        await next();
+    });
 }
 else
 {
