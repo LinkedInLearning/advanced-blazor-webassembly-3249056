@@ -3,7 +3,7 @@ using MyBlazorShopHosted.Libraries.Shared.Product.Models;
 using MyBlazorShopHosted.Web.Client.Pages;
 using RichardSzalay.MockHttp;
 
-namespace MyBlazorShopHosted.Testing.Client
+namespace MyBlazorShopHosted.Testing.Unit.Client
 {
     public class ProductListingTests : BaseTest
     {

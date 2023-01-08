@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MyBlazorShopHosted.Testing.Client
+namespace MyBlazorShopHosted.Testing.Unit.Client
 {
     public static class MockHttpClientHelper
     {

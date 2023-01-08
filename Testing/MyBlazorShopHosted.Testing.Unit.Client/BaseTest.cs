@@ -5,7 +5,7 @@ using MyBlazorShopHosted.Libraries.Shared.Product.Models;
 using MyBlazorShopHosted.Web.Client.StateManagement;
 using RichardSzalay.MockHttp;
 
-namespace MyBlazorShopHosted.Testing.Client
+namespace MyBlazorShopHosted.Testing.Unit.Client
 {
     public abstract class BaseTest : IDisposable
     {
