@@ -47,11 +47,11 @@
                     <InputNumber @bind-Value="ProductAddToCartModel.Quantity" id="product-qty" type="number" min="1" required />
                 </div>
             </div>
-            <div>
+            <div @ref="AddToCartRef">
                 <button type="submit" class="button lg solid gold">Add to cart</button>
             </div>
         </EditForm>
-        <div style="display: none;">
+        <div @ref="AddedToCartRef" style="display: none;">
             <span class="added-to-cart">Added to Cart</span>
         </div>
     </section>
@@ -85,6 +85,9 @@
 
     private IJSObjectReference? Module { get; set; }
 
+    private ElementReference AddToCartRef;
+
+    private ElementReference AddedToCartRef;
 }
 @functions {
     protected override async Task OnInitializedAsync()
@@ -157,6 +160,10 @@
                 // Signal that the cart has been updated.
                 await ShoppingCartCountModel.OnUpdateCartAsync(httpClient);
             }
+
+            await Module.InvokeVoidAsync("ToggleElement", AddToCartRef);
+            await Module.InvokeVoidAsync("ToggleElement", AddedToCartRef);
+            await Task.Delay(TimeSpan.FromSeconds(3));
 
             navigationManager.NavigateTo("/cart");
         }
