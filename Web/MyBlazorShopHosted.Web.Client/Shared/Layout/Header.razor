@@ -20,10 +20,14 @@
 
     private string? TimeNow { get; set; }
 
+    private IJSObjectReference? Module { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        //var offsetMinutes = await jsRuntime.InvokeAsync<double>("GetLocalOffsetMinutes");
-        //TimeNow = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(offsetMinutes)).ToString("HH:mm");
+        Module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/JS/JSInterlop.js");
+
+        var offsetMinutes = await Module.InvokeAsync<double>("GetLocalOffsetMinutes");
+        TimeNow = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(offsetMinutes)).ToString("HH:mm");
 
         if (ShoppingCartCountModel != null)
         {
