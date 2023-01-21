@@ -29,7 +29,7 @@
     </nav>
     <section id="product" itemscope itemtype="https://schema.org/Product">
         <header>
-            <button class="button solid gold">Change image</button>
+            <button class="button solid gold" @onclick="ChangeImage">Change image</button>
             @if (!string.IsNullOrWhiteSpace(ImageSource))
             {
                 <div class="wrapper">
@@ -113,6 +113,11 @@
 
             ProductAddToCartModel = new ProductAddToCartModel();
         }
+    }
+
+    private void ChangeImage()
+    {
+        ImageSource = "images/lil-monsters-pillow-blade.svg";
     }
 
     private async Task AddToCartAsync()
