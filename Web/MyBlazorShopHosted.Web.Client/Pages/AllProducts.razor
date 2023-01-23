@@ -16,8 +16,7 @@
                 </tr>
             </thead>
                 <tbody>
-                @foreach (var product in Products)
-                {
+                <Virtualize Items="Products" Context="product" ItemSize="200" OverscanCount="1"> 
                     <tr>
                         <td>
                             <img src="/images/@product.Image?a=@product.GetHashCode()" width="300" />
@@ -32,8 +31,8 @@
                             <strong>@product.Price.ToString("c")</strong>
                         </td>
                     </tr>
-                }                
-                </tbody>
+                </Virtualize>
+            </tbody>
         </table>
     }
     <h2>Second Products</h2>
@@ -47,7 +46,7 @@
             </tr>
         </thead>
         <tbody>
-            @*
+            
             <Virtualize ItemsProvider="LoadProducts" Context="product" OverscanCount="1" ItemSize="200">
                 <ItemContent>
                     <tr>
@@ -69,7 +68,7 @@
                     <p>Loading...</p>
                 </Placeholder>
             </Virtualize>
-            *@
+            
         </tbody>
     </table>
     
