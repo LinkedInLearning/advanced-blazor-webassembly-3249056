@@ -85,7 +85,11 @@
 
     private async ValueTask<ItemsProviderResult<ProductModel>> LoadProducts(ItemsProviderRequest request)
     {
-        var products = await httpClient.GetFromJsonAsync<List<ProductModel>>(string.Format("/api/product/start-index?size={0}&startIndex={1}", request.Count, request.StartIndex));
+        var products = await httpClient.GetFromJsonAsync<List<ProductModel>>
+        (string.Format("/api/product/start-index?size={0}&startIndex={1}", 
+        request.Count, 
+        request.StartIndex));
+
         var totalCount = await httpClient.GetFromJsonAsync<int>("/api/product/count");
 
         if (products != null)
