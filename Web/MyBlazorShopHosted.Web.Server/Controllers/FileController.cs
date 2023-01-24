@@ -58,7 +58,7 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 // Get full file path
                 var path = Path.Combine(folderPath, file.FileName);
 
-                /*
+                
                 var extension = Path.GetExtension(path);
 
                 var allowedUploadFileType = AllowedUploadFileTypes.ToList()
@@ -82,7 +82,16 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                         }
                     }                
                 }
-                */
+
+                if (file.Length > AllowedUploadFileSizeLimitBytes)
+                {
+                    errors.Add("The uploaded file exceeds the maximum size limit");
+                }
+                
+                if (errors.Any())
+                {
+                    return Ok(new { Errors = errors, Success = false });
+                }
 
                 // Upload file (if path doesn't exist)
                 if (!System.IO.File.Exists(path))
