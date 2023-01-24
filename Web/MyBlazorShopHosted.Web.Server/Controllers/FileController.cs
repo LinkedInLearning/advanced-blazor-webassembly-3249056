@@ -61,7 +61,8 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 /*
                 var extension = Path.GetExtension(path);
 
-                var allowedUploadFileType = AllowedUploadFileTypes.ToList().FirstOrDefault(s => s.FileExtension == extension);
+                var allowedUploadFileType = AllowedUploadFileTypes.ToList()
+                    .FirstOrDefault(s => s.FileExtension == extension);
 
                 if (allowedUploadFileType == null)
                 {
@@ -71,9 +72,11 @@ namespace MyBlazorShopHosted.Web.Server.Controllers
                 {
                     using (var reader = new BinaryReader(file.OpenReadStream()))
                     {
-                        var headerBytes = reader.ReadBytes(allowedUploadFileType.FileSignatures.Max(t => t.Length));
+                        var headerBytes = reader.ReadBytes(allowedUploadFileType
+                            .FileSignatures.Max(t => t.Length));
 
-                        if (!allowedUploadFileType.FileSignatures.Any(sig => headerBytes.Take(sig.Length).SequenceEqual(sig)))
+                        if (!allowedUploadFileType.FileSignatures.Any(sig => headerBytes
+                        .Take(sig.Length).SequenceEqual(sig)))
                         {
                             errors.Add("The uploaded file is not valid");
                         }
