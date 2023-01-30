@@ -63,27 +63,31 @@
             AllowedUploadFileResult = AllowedUploadFileHelper.ValidateFile(uploadFile.Name, uploadFileBuffer);
         }
 
-        using var content = new MultipartFormDataContent();
-
-        // Add each file to the upload.
-        foreach (var uploadFile in UploadFiles)
-        {
-            var fileContent = new StreamContent(uploadFile.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(uploadFile.ContentType);
-
-            content.Add(content: fileContent, name: "\"files\"", fileName: uploadFile.Name);
-        }
-
-        // Post the file up to the API and return a result.
-        AllowedUploadFileResult = await (await httpClient.PostAsync("/api/file/upload", content)).Content.ReadFromJsonAsync<AllowedUploadFileResult>();
-
         if (AllowedUploadFileResult?.Success ?? false)
         {
-            // If successfully uploaded, note that it has been uploaded.
-            Uploaded = true;
-            InputFileId = Guid.NewGuid();
+            using var content = new MultipartFormDataContent();
+
+            // Add each file to the upload.
+            foreach (var uploadFile in UploadFiles)
+            {
+                var fileContent = new StreamContent(uploadFile.OpenReadStream());
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(uploadFile.ContentType);
+
+                content.Add(content: fileContent, name: "\"files\"", fileName: uploadFile.Name);
+            }
+
+            // Post the file up to the API and return a result.
+            AllowedUploadFileResult = await (await httpClient.PostAsync("/api/file/upload", content))
+            .Content.ReadFromJsonAsync<AllowedUploadFileResult>();
+
+            if (AllowedUploadFileResult?.Success ?? false)
+            {
+                // If successfully uploaded, note that it has been uploaded.
+                Uploaded = true;
+                InputFileId = Guid.NewGuid();
+            }
         }
-        
+
 
     }
 }
