@@ -39,7 +39,8 @@ namespace MyBlazorShopHosted.Libraries.Shared.Upload.Extensions
             var extension = Path.GetExtension(path);
 
             // Get allowed types based on the file extension
-            var allowedUploadFileType = AllowedUploadFileTypes.ToList().FirstOrDefault(s => s.FileExtension == extension);
+            var allowedUploadFileType = AllowedUploadFileTypes.ToList()
+                .FirstOrDefault(s => s.FileExtension == extension);
 
             if (allowedUploadFileType == null)
             {
@@ -50,7 +51,8 @@ namespace MyBlazorShopHosted.Libraries.Shared.Upload.Extensions
             {
                 // Get the first number of bytes of the file to validate against the allowed upload file types
                 var headerFileBytes = new byte[allowedUploadFileType.FileSignatures.Max(t => t.Length)];
-                Array.Copy(fileBytes, headerFileBytes, allowedUploadFileType.FileSignatures.Max(t => t.Length));
+                Array.Copy(fileBytes, headerFileBytes, allowedUploadFileType
+                    .FileSignatures.Max(t => t.Length));
 
                 if (!allowedUploadFileType.FileSignatures.Any(sig => headerFileBytes.Take(sig.Length).SequenceEqual(sig)))
                 {
