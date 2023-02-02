@@ -113,6 +113,8 @@
 
                 if (RecentlyViewedProducts != null && !RecentlyViewedProducts.Any(rp => rp.Sku == Product.Sku))
                 {
+                    RecentlyViewedProducts.Add(Product);
+                    await sessionStorageService.SetItemAsync(RECENTLY_VIEWED_PRODUCTS_KEY, RecentlyViewedProducts);
                 }
 
             }
