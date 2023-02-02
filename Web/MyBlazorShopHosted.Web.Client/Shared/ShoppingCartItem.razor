@@ -2,6 +2,7 @@
 @using MyBlazorShopHosted.Libraries.Shared.Product.Models
 @using MyBlazorShopHosted.Web.Client.StateManagement
 @inject HttpClient httpClient
+@inject IShoppingCartStateContainer shoppingCartStateContainer
 @if (Item != null)
 {
     <tr>
@@ -36,6 +37,7 @@
                     Item.Product.Sku
                 )
             );
+            await shoppingCartStateContainer.UpdateTotalItemsCountAsync(httpClient);
         }
     }
 }
