@@ -88,9 +88,11 @@
     {        
         if (!await sessionStorageService.ContainKeyAsync(RECENTLY_VIEWED_PRODUCTS_KEY))
         {
-            await sessionStorageService.SetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY, new List<ProductModel>());
+            await sessionStorageService.SetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY, 
+                new List<ProductModel>());
         }
-        RecentlyViewedProducts = await sessionStorageService.GetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY);
+        RecentlyViewedProducts = await sessionStorageService
+            .GetItemAsync<List<ProductModel>>(RECENTLY_VIEWED_PRODUCTS_KEY);
 
         // Get product listing.
         await base.OnInitializedAsync();
