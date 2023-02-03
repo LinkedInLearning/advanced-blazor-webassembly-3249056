@@ -5,6 +5,7 @@ using MyBlazorShopHosted.Libraries.Services.ShoppingCart;
 using MyBlazorShopHosted.Libraries.Services.Storage;
 using System.Net.Http.Headers;
 using HeaderNames = Microsoft.Net.Http.Headers.HeaderNames;
+using MyBlazorShopHosted.Web.Client.StateManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddSingleton<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 
-/*
+
 builder.Services.AddSingleton(serviceProvider => {
     var addressFeature = serviceProvider.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>();
     var baseAddress = addressFeature?.Addresses.First();
@@ -32,7 +33,8 @@ builder.Services.AddSingleton(serviceProvider => {
     };
     return http;
 });
-*/
+builder.Services.AddScoped<IShoppingCartStateContainer, ShoppingCartStateContainer>();
+
 
 var app = builder.Build();
 
@@ -66,6 +68,6 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("/ProductListing");
 
 app.Run();
