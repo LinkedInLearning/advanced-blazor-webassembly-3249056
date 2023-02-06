@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlazorShopHosted.Librarie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{8EBA5770-6AAC-4B4F-9C99-CD5F4BD58B0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlazorShopHosted.Testing.E2E.Client", "Testing\MyBlazorShopHosted.Testing.E2E.Client\MyBlazorShopHosted.Testing.E2E.Client.csproj", "{BAB58D68-551C-4F48-96F7-AE6E70CCCDE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlazorShopHosted.Testing.E2E.Client", "Testing\MyBlazorShopHosted.Testing.E2E.Client\MyBlazorShopHosted.Testing.E2E.Client.csproj", "{BAB58D68-551C-4F48-96F7-AE6E70CCCDE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
