@@ -1,5 +1,6 @@
-# Blazor WebAssembly: Foundational Skills
-This is the repository for the LinkedIn Learning course Blazor WebAssembly: Foundational Skills. The full course is available from [LinkedIn Learning][lil-course-url].
+# Advanced Blazor WebAssembly.
+This is the repository for the LinkedIn Learning course Advanced Blazor WebAssembly.. The full course is available from [LinkedIn Learning][lil-course-url].
+
 
 _See the readme file in the main branch for updated instructions and information._
 ## Instructions
