@@ -28,7 +28,14 @@ namespace MyBlazorShopHosted.Testing.Unit.Client
         [Fact]
         public void TotalPageCount_GreaterThan1_ShowsNav()
         {
+            var productListing = _testContext.RenderComponent<ProductListing>(parameters =>
+            {
+                parameters.Add(pl => pl.Page, 1);
+            });
+            productListing.WaitForState(() => productListing.FindAll("nav")?.Any() ?? false,
+                TimeSpan.FromSeconds(5));
 
+            Assert.NotNull(productListing.Find("nav"));
         }
     }
 }
