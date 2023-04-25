@@ -1,8 +1,14 @@
-# Advanced Blazor WebAssembly.
-This is the repository for the LinkedIn Learning course Advanced Blazor WebAssembly.. The full course is available from [LinkedIn Learning][lil-course-url].
+# Advanced Blazor WebAssembly
+This is the repository for the LinkedIn Learning course Advanced Blazor WebAssembly. The full course is available from [LinkedIn Learning][lil-course-url].
+
+![Advanced Blazor WebAssembly][lil-thumbnail-url] 
+
+Looking to take your skills to the next level with Blazor WebAssembly? This course is designed to help you become a more advanced Blazor WebAssembly user, building upon the materials taught in instructor David Grace’s introductory course Blazor WebAssembly: Foundational Skills.
+
+Discover more skills a developer needs to know to set up and run a coding system like a pro, including JavaScript interoperability, Razor components, SignalR, file uploads and downloads, state management, and prerendering. Test out your new skills along the way in the exercise challenges at the end of each section. Upon completing this course, you’ll be prepared to perform end-to-end testing on your app when it's finally ready to go to production.
 
 
-_See the readme file in the main branch for updated instructions and information._
+
 ## Instructions
 This repository has branches for each of the videos in the course. You can use the branch pop up menu in github to switch to a specific branch and take a look at the course at that stage, or you can add `/tree/BRANCH_NAME` to the URL to go to the branch you want to access.
 
@@ -21,15 +27,16 @@ To resolve this issue:
     Add changes to git using this command: git add .
 	Commit changes using this command: git commit -m "some message"
 
-## Installing
-1. To use these exercise files, you must have the following installed:
-	- [list of requirements for course]
-2. Clone this repository into your local machine using the terminal (Mac), CMD (Windows), or a GUI tool like SourceTree.
-3. [Course-specific instructions]
+
+### Instructor
+
+David Grace 
+                            
 
 
-[0]: # (Replace these placeholder URLs with actual course URLs)
+                            
 
-[lil-course-url]: https://www.linkedin.com/learning/
-[lil-thumbnail-url]: http://
+Check out my other courses on [LinkedIn Learning](https://www.linkedin.com/learning/instructors/david-grace).
 
+[lil-course-url]: https://www.linkedin.com/learning/advanced-blazor-webassembly?dApp=59033956&leis=LAA
+[lil-thumbnail-url]: https://media.licdn.com/dms/image/D560DAQEyFaFm-3p0DQ/learning-public-crop_675_1200/0/1682107712406?e=2147483647&v=beta&t=_UM9ggiln5WP9CNHamRSGCZ5tVGhCZkPcqVzHHMcX6Y
